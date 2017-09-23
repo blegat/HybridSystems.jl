@@ -106,7 +106,7 @@ function getis(s::HybridSystem, solver, c)
             newp = ATrp(l[v].p, E)
             @show expr
             @show newp
-            expr -= newp * (u == 1 ? 5 : 1/5)
+            expr -= newp
         end
         @show expr
         @constraint m expr >= 0
