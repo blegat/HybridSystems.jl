@@ -4,15 +4,12 @@ using JuMP
 struct ConeLyap{T, P<:AbstractPolynomial{T}, S}
     p::P
     Q::Matrix{S}
+    b::Vector{S}
     c::Vector{Float64}
     H::Matrix{Float64}
     #L::Matrix{JuMP.Variable}
     #λinv::Vector{JuMP.Variable}
 end
-ConeLyap(p::P, Q::Matrix{S}, c, H) where {T, P<:AbstractPolynomial{T}, S} = ConeLyap{T, P, S}(p, Q, c, H)
-JuMP.getvalue(p::ConeLyap) = ConeLyap(getvalue(p.p), getvalue(p.Q), p.c, p.H)
-ellipsoid(p::ConeLyap{T, P, JuMP.Variable}) where {T, P<:AbstractPolynomial{T}} = ellipsoid(getvalue(p))
-ellipsoid(p::ConeLyap) = Ellipsoid(inv(p.Q), p.c)
 
 using RecipesBase
 

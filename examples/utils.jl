@@ -12,6 +12,46 @@
 #    end
 #end
 
+ConeLyap(p::P, Q::Matrix{S}, b::Vector{S}, c, H) where {T, P<:AbstractPolynomial{T}, S} = ConeLyap{T, P, S}(p, Q, b, c, H)
+JuMP.getvalue(p::ConeLyap) = ConeLyap(getvalue(p.p), getvalue(p.Q), getvalue(p.b), p.c, p.H)
+ellipsoid(p::ConeLyap{T, P, JuMP.Variable}) where {T, P<:AbstractPolynomial{T}} = ellipsoid(getvalue(p))
+
+function ellipsoid(p::ConeLyap)
+    n = size(p.Q, 1)
+    @show trace(p.Q)
+    @show eigvals(p.Q)
+    P = [-1. p.b'
+         p.b  p.Q]
+    display(P)
+    @show eigvals(P)
+    HPH = p.H * P * p.H
+    @show eigvals(HPH)
+    @show diag(HPH)
+    iHPH = inv(HPH)
+    @show diag(iHPH)
+    @show eigvals(iHPH)
+    # iHPH is
+    # λ * [c'c-1  -c'
+    #         -c   Q]
+    # Let iHPH be [β b'; b B]
+    # We have
+    # β = λ c'c - λ
+    # b = -λ c
+    # hence
+    # λ^2 c'c = λ β + λ^2
+    # λ^2 c'c = b'b
+    # which give the equation λ^2 + λ β + b'b to find λ
+    ix = 1+(1:n)
+    β = iHPH[1, 1]
+    b = iHPH[1, ix]
+    λ = (-β + sqrt(β^2 + 4 * dot(b, b))) / 2
+    c = -b / λ
+    Q = iHPH[ix, ix] / λ
+    @show eigvals(Q)
+    Ellipsoid(Q, c)
+end
+
+
 function algebraiclift(s::DiscreteLinearControlSystem{T, MT, FullSpace}) where {T, MT}
     n = statedim(s)
     z = find(i -> iszero(sum(abs.(s.B[i,:]))), 1:n)
@@ -43,36 +83,37 @@ using PolyJuMP
 using SumOfSquares
 using JuMP
 using LightGraphs
-function ATrp(p, A)
-    @show p
-    @show A
-    x = variables(p)
+function ATrp(p, x, A)
     B = r(A)'
-    @show B
     y = x[1:size(B, 2)]
-    @show p(x => r(A)' * y)
     p(x => r(A)' * y)
 end
-function lhs(p, Re::ConstantVector)
-    ATrp(p, first(Re).A)
+function lhs(p, x, Re::ConstantVector)
+    # If it is not constant, I would be comparing dummy variables of different meaning
+    ATrp(p, x, first(Re).A)
 end
 
 function getp(m::Model, c, x, z::AbstractVariable)
     y = [z; x]
     n = length(x)
-    Q = @variable m [1:n, 1:n] SDP
-    b = zeros(n)
-    P = [-1 b'
-         b  Q]
+    if c == [0, 0]
+        #Q = eye(2)
+        #b = zeros(n)
+        b = @variable m [1:n]
+    else
+        c = [tan((atan(2)+atan(4))/2), 0]
+        #Q = diagm([0.0120499, 0.10977226575093102])
+        #b = zeros(n)
+        b = @variable m [1:n]
+    end
+    Q = @variable m [1:n, 1:n] Symmetric
+    @constraint m x' * Q * x in DSOSCone()
     H = householder([1; c]) # We add 1, for z
-    display(P)
-    println()
+    P = [-1. b'
+         b  Q]
     HPH = H * P * H
-    display(HPH)
-    println()
     p = y' * HPH * y
-    @show p
-    ConeLyap(p, Q, c, H)
+    ConeLyap(p, Q, b, c, H)
     #@constraint m sum(Q) == 1 # dehomogenize
     #@variable m L[1:n, 1:n]
     #@variable m λinv[1:(n-1)] >= 0
@@ -91,36 +132,41 @@ function getis(s::HybridSystem, solver, c)
     #@variable m p[1:n] Poly(X)
     #@variable m vol
     #@objective m Max vol
-    
+
     @objective m Max sum(p -> trace(p.Q), l)
-    
+
+    λouts = Vector{Vector{JuMP.Variable}}(n)
     for u in 1:n
         # Constraint 1
-        #@variable m λout[1:m] >= 0
+        N = length(out_neighbors(g, u))
+        λout = @variable m [1:N] lowerbound=0
+        λouts[u] = λout
         #@constraint m sum(λin) == 1
         Σ = symbol.(s.automaton, Edge.(u, out_neighbors(g, u)))
-        expr = lhs(l[u].p, s.resetmaps[Σ])
+        expr = lhs(l[u].p, y, s.resetmaps[Σ])
         for (j, v) in enumerate(out_neighbors(g, u))
             E = s.resetmaps[Σ[j]].E
             #expr -= λout[j] * p[v](x => r(E)' * x)
-            newp = ATrp(l[v].p, E)
-            @show expr
-            @show newp
-            expr -= newp
+            newp = ATrp(l[v].p, y, E)
+            expr -= λout[j] * newp
         end
-        @show expr
-        @constraint m expr >= 0
+        @constraint m expr in DSOSCone()
         # Constraint 2
         #@SDconstraint m differentiate(p[u], x, 2) >= 0
         # Constraint 3
         for hs in ineqs(s.invariants[u])
-            @show hs
-            @show l[u].p(y => [-hs.β; hs.a])
+            @show [-hs.β; hs.a]
             @constraint m l[u].p(y => [-hs.β; hs.a]) <= 0
         end
     end
 
     status = solve(m)
+
+    @show getobjectivevalue(m)
+
+    for u in 1:n
+        @show getvalue.(λouts[u])
+    end
 
     @show status
     @assert status == :Optimal
