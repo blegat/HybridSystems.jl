@@ -16,41 +16,40 @@ ConeLyap(p::P, Q::Matrix{S}, b::Vector{S}, c, H) where {T, P<:AbstractPolynomial
 JuMP.getvalue(p::ConeLyap) = ConeLyap(getvalue(p.p), getvalue(p.Q), getvalue(p.b), p.c, p.H)
 ellipsoid(p::ConeLyap{T, P, JuMP.Variable}) where {T, P<:AbstractPolynomial{T}} = ellipsoid(getvalue(p))
 
-function ellipsoid(p::ConeLyap)
-    n = size(p.Q, 1)
-    @show trace(p.Q)
-    @show eigvals(p.Q)
-    P = [-1. p.b'
-         p.b  p.Q]
-    display(P)
-    @show eigvals(P)
-    HPH = p.H * P * p.H
-    @show eigvals(HPH)
-    @show diag(HPH)
-    iHPH = inv(HPH)
-    @show diag(iHPH)
-    @show eigvals(iHPH)
-    # iHPH is
-    # λ * [c'c-1  -c'
-    #         -c   Q]
-    # Let iHPH be [β b'; b B]
+function Ellipsoid(ell::LiftedEllipsoid)
+    # P is
+    # λ * [c'Qc-1  -c'Q
+    #         -Qc   Q]
+    # Let P be [β b'; b B]
     # We have
-    # β = λ c'c - λ
-    # b = -λ c
+    # β = λ c'Qc - λ
+    # b = -λ Qc <=> Q^{-1/2}b = -λ Q^{1/2} c
     # hence
-    # λ^2 c'c = λ β + λ^2
-    # λ^2 c'c = b'b
-    # which give the equation λ^2 + λ β + b'b to find λ
+    # λ c'Qc = β + λ
+    # λ^2 c'Qc = b'Q^{-1}b = λ b'B^{-1}b <=> λ c'Qc = b'B^{-1}b
+    # Hence λ = b'B^{-1}b - β
+    n = LinAlg.checksquare(ell.P)-1
     ix = 1+(1:n)
-    β = iHPH[1, 1]
-    b = iHPH[1, ix]
-    λ = (-β + sqrt(β^2 + 4 * dot(b, b))) / 2
-    c = -b / λ
-    Q = iHPH[ix, ix] / λ
-    @show eigvals(Q)
+    β = ell.P[1, 1]
+    b = ell.P[1, ix]
+    B = ell.P[ix, ix]
+    λ = dot(b, B \ b) - β
+    c = -(B \ b)
+    Q = B / λ
     Ellipsoid(Q, c)
 end
 
+@recipe function f(ell::LiftedEllipsoid)
+    Ellipsoid(ell)
+end
+
+function ellipsoid(p::ConeLyap)
+    n = size(p.Q, 1)
+    P = [-1. p.b'
+         p.b  p.Q]
+    HPH = p.H * P * p.H
+    LiftedEllipsoid(inv(HPH))
+end
 
 function algebraiclift(s::DiscreteLinearControlSystem{T, MT, FullSpace}) where {T, MT}
     n = statedim(s)
@@ -96,20 +95,13 @@ end
 function getp(m::Model, c, x, z::AbstractVariable)
     y = [z; x]
     n = length(x)
-    if c == [0, 0]
-        #Q = eye(2)
-        #b = zeros(n)
-        b = @variable m [1:n]
-    else
-        c = [tan((atan(2)+atan(4))/2), 0]
-        #Q = diagm([0.0120499, 0.10977226575093102])
-        #b = zeros(n)
-        b = @variable m [1:n]
-    end
+    β = 1.#@variable m lowerbound=0.
+    b = @variable m [1:n]
+    #@constraint m b .== 0
     Q = @variable m [1:n, 1:n] Symmetric
     @constraint m x' * Q * x in DSOSCone()
     H = householder([1; c]) # We add 1, for z
-    P = [-1. b'
+    P = [-β b'
          b  Q]
     HPH = H * P * H
     p = y' * HPH * y
@@ -136,6 +128,7 @@ function getis(s::HybridSystem, solver, c)
     @objective m Max sum(p -> trace(p.Q), l)
 
     λouts = Vector{Vector{JuMP.Variable}}(n)
+    #λouts = Vector{Vector{Float64}}(n)
     for u in 1:n
         # Constraint 1
         N = length(out_neighbors(g, u))
@@ -155,7 +148,6 @@ function getis(s::HybridSystem, solver, c)
         #@SDconstraint m differentiate(p[u], x, 2) >= 0
         # Constraint 3
         for hs in ineqs(s.invariants[u])
-            @show [-hs.β; hs.a]
             @constraint m l[u].p(y => [-hs.β; hs.a]) <= 0
         end
     end

@@ -20,6 +20,10 @@ struct Ellipsoid{T}
     c::Vector{T}
 end
 
+struct LiftedEllipsoid{T}
+    P::Matrix{T}
+end
+
 @recipe function f(ell::Ellipsoid)
     @assert Base.LinAlg.checksquare(ell.Q) == 2
     αs = linspace(0, 2π, 64)
