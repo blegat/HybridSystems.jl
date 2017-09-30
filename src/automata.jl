@@ -1,6 +1,8 @@
-export LightAutomaton, AbstractAutomaton
-export states, modes, nstates, nmodes, add_transition!
-export source, event, symbol, target
+export LightAutomaton, AbstractAutomaton, OneStateAutomaton
+export states, modes, nstates, nmodes, transitions, ntransitions
+export source, event, symbol, target, add_transition!
+export in_transitions, out_transitions
+
 
 abstract type AbstractAutomaton end
 
@@ -21,6 +23,20 @@ It has the alias `nmodes`.
 """
 function nstates end
 const nmodes = nstates
+
+"""
+    transitions(A::AbstractAutomaton)
+
+Returns an iterator over the transitions of the automaton `A`.
+"""
+function transitions end
+
+"""
+    ntransitions(A::AbstractAutomaton)
+
+Returns the number of transitions of the automaton `A`.
+"""
+function ntransitions end
 
 """
     add_transition!(A::AbstractAutomaton, q, r, σ)
@@ -72,11 +88,13 @@ end
 
 states(A::OneStateAutomaton) = Base.OneTo(1)
 nstates(A::OneStateAutomaton) = 1
+transitions(A::OneStateAutomaton) = Base.OneTo(A.nt)
+ntransitions(A::OneStateAutomaton) = A.nt
 source(::OneStateAutomaton, t::Int) = 1
 event(::OneStateAutomaton, t::Int) = t
 target(::OneStateAutomaton, t::Int) = 1
-in_transitions(A::OneStateAutomaton, s) = Base.OneTo(A.nt)
-out_transitions(A::OneStateAutomaton, s) = Base.OneTo(A.nt)
+in_transitions(A::OneStateAutomaton, s) = transitions(A)
+out_transitions(A::OneStateAutomaton, s) = transitions(A)
 
 using LightGraphs
 
@@ -93,6 +111,9 @@ end
 states(A::LightAutomaton) = vertices(A.G)
 nstates(A::LightAutomaton) = nv(A.G)
 
+transitions(A::LightAutomaton) = edges(A.G)
+ntransitions(A::LightAutomaton) = ne(A.G)
+
 function add_transition!(A::LightAutomaton, q, r, σ)
     t = Edge(q, r)
     add_edge!(A.G, t)
@@ -101,7 +122,7 @@ end
 
 source(::LightAutomaton, t::Edge) = t.src
 event(A::LightAutomaton, t::Edge) = A.Σ[t]
-target(::LightAutomaton, t::Int) = t.dst
+target(::LightAutomaton, t::Edge) = t.dst
 
 function in_transitions(A::LightAutomaton, s)
     Edge.(in_neighbors(A.G, s), s)
