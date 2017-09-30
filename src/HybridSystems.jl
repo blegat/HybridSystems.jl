@@ -23,13 +23,11 @@ end
 # The hybrid system both acts like an automaton and a system
 
 # Automaton
-states(hs::HybridSystem) = states(hs.A)
-nstates(hs::HybridSystem) = nstates(hs.A)
-source(::HybridSystem, t) = 1
-event(::HybridSystem, t) = t
-target(::HybridSystem, t) = 1
-in_transitions(A::HybridSystem, s) = 1:s.nt
-out_transitions(A::HybridSystem, s) = 1:s.nt
+for f in (:states, :nstates, :source, :event, :target, :in_transitions, :out_transitions)
+    @eval begin
+        $f(hs::HybridSystem, args...) = $f(hs.automaton, args...)
+    end
+end
 
 # System
 statedim(hs::HybridSystem, s) = statedim(hs.modes[s])
