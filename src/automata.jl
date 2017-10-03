@@ -45,6 +45,13 @@ Adds a transition between states `q` and `r` with symbol `σ` to the automaton `
 """
 function add_transition! end
 """
+    rem_transition!(A::AbstractAutomaton, q, r, σ)
+
+Remove the transition between states `q` and `r` with symbol `σ` to the automaton `A`.
+"""
+function rem_transition! end
+
+"""
     source(A::AbstractAutomaton, t)
 
 Returns the source of the transition `t`.
@@ -118,6 +125,11 @@ function add_transition!(A::LightAutomaton, q, r, σ)
     t = Edge(q, r)
     add_edge!(A.G, t)
     A.Σ[t] = σ
+end
+function rem_transition!(A::LightAutomaton, t)
+    edge = Edge(source(t), target(t))
+    rem_edge!(A.G, edge)
+    delete!(A.Σ, edge)
 end
 
 source(::LightAutomaton, t::Edge) = t.src
