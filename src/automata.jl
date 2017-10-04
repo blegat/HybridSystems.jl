@@ -1,8 +1,7 @@
 export LightAutomaton, AbstractAutomaton, OneStateAutomaton
 export states, modes, nstates, nmodes, transitions, ntransitions
-export source, event, symbol, target, add_transition!
+export source, event, symbol, target, add_transition!, rem_transition!
 export in_transitions, out_transitions
-
 
 abstract type AbstractAutomaton end
 
@@ -127,7 +126,7 @@ function add_transition!(A::LightAutomaton, q, r, σ)
     A.Σ[t] = σ
 end
 function rem_transition!(A::LightAutomaton, t)
-    edge = Edge(source(t), target(t))
+    edge = Edge(source(A, t), target(A, t))
     rem_edge!(A.G, edge)
     delete!(A.Σ, edge)
 end
