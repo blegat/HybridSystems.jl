@@ -1,6 +1,7 @@
 export LightAutomaton, AbstractAutomaton, OneStateAutomaton
 export states, modes, nstates, nmodes, transitions, ntransitions
-export source, event, symbol, target, add_transition!, rem_transition!
+export source, event, symbol, target
+export add_transition!, rem_transition!, rem_state!
 export in_transitions, out_transitions
 
 abstract type AbstractAutomaton end
@@ -49,6 +50,12 @@ function add_transition! end
 Remove the transition between states `q` and `r` with symbol `σ` to the automaton `A`.
 """
 function rem_transition! end
+"""
+    rem_state!(A::AbstractAutomaton, q)
+
+Remove the state `q` to the automaton `A`.
+"""
+function rem_state! end
 
 """
     source(A::AbstractAutomaton, t)
@@ -129,6 +136,16 @@ function rem_transition!(A::LightAutomaton, t)
     edge = Edge(source(A, t), target(A, t))
     rem_edge!(A.G, edge)
     delete!(A.Σ, edge)
+end
+
+function rem_state!(A::LightAutomaton, st)
+    for t in in_transitions(A, s)
+        rem_transition!(A, t)
+    end
+    for t in out_transitions(A, s)
+        rem_transition!(A, t)
+    end
+    rem_vertex!(A.G, st)
 end
 
 source(::LightAutomaton, t::Edge) = t.src
