@@ -1,7 +1,7 @@
 export LightAutomaton, AbstractAutomaton, OneStateAutomaton
 export states, modes, nstates, nmodes, transitions, ntransitions
 export source, event, symbol, target
-export add_transition!, rem_transition!, rem_state!
+export add_transition!, has_transition, rem_transition!, rem_state!
 export in_transitions, out_transitions
 
 abstract type AbstractAutomaton end
@@ -44,6 +44,12 @@ function ntransitions end
 Adds a transition between states `q` and `r` with symbol `σ` to the automaton `A`.
 """
 function add_transition! end
+"""
+    has_transition(A::AbstractAutomaton, t)
+
+Returns `true` if the automaton `A` has the transition `t`.
+"""
+function has_transition end
 """
     rem_transition!(A::AbstractAutomaton, q, r, σ)
 
@@ -131,6 +137,11 @@ function add_transition!(A::LightAutomaton, q, r, σ)
     t = Edge(q, r)
     add_edge!(A.G, t)
     A.Σ[t] = σ
+end
+# FIXME this is nonsense for multiples edges with different labels
+function has_transition(A::LightAutomaton, t)
+    edge = Edge(source(A, t), target(A, t))
+    has_edge(A.G, edge)
 end
 function rem_transition!(A::LightAutomaton, t)
     edge = Edge(source(A, t), target(A, t))
