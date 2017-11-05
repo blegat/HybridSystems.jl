@@ -101,7 +101,7 @@ function out_transitions end
 
 Automaton with one state and the `nt` events 1, ..., `nt`.
 """
-struct OneStateAutomaton
+struct OneStateAutomaton <: AbstractAutomaton
     nt::Int
 end
 

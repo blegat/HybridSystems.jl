@@ -9,7 +9,7 @@ H = polyhedron(SimpleHRepresentation([eye(2); -eye(2)], [ones(2); ones(2)]), CDD
 is = DiscreteIdentitySystem(2)
 s = DiscreteLinearControlSystem(eye(2), Matrix{Float64}(2, 0))
 
-sw = ControlledSwitching()
+sw = AutonomousSwitching()
 
 using SemialgebraicSets
 fs = FullSpace()

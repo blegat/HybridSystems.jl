@@ -19,6 +19,9 @@ struct HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem
     # Can be used by extensions
     ext::Dict{Symbol, Any}
 end
+function HybridSystem(a, m, i, g, r, s)
+    HybridSystem(a, m, i, g, r, s, Dict{Symbol, Any}())
+end
 
 # The hybrid system both acts like an automaton and a system
 
