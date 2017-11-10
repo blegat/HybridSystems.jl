@@ -18,13 +18,16 @@ add_transition!(A, 2, 2, 1)
 
 using Polyhedra
 using CDDLib
-P0 = polyhedron(SimpleHRepresentation([-1. 0; 1 0; 0 -1; 0 1], [0., 35, 4, 4]), CDDLibrary())
-Pa = polyhedron(SimpleHRepresentation([1. 0], [15.6]), CDDLibrary())
-Pb = polyhedron(SimpleHRepresentation([1. 0], [24.5]), CDDLibrary())
+const U = 4
+const va = 15.6
+const vb = 24.5
+P0 = polyhedron(SimpleHRepresentation([-1. 0; 1 0; 0 -1; 0 1], [0., 35, U, U]), CDDLibrary())
+Pa = polyhedron(SimpleHRepresentation([1. 0], [va]), CDDLibrary())
+Pb = polyhedron(SimpleHRepresentation([1. 0], [vb]), CDDLibrary())
 
 is = DiscreteIdentitySystem(2)
 #s = DiscreteLinearControlSystem([1. 0; 0 1], reshape([1.; 0], 2, 1), U)
-h = 0.4
+const h = 0.4
 s = DiscreteLinearControlSystem([1 h; 0 0], reshape([0; h], 2, 1))
 
 sw = AutonomousSwitching()
@@ -39,7 +42,7 @@ Gu = ConstantVector(fs, M)
 Re = ConstantVector(s, M)
 Sw = ConstantVector(sw, N)
 
-#In = [P0, P0, P0, P0 ∩ Pa]
-In = [P0, P0 ∩ Pa]
+#I = [P0, P0, P0, P0 ∩ Pa]
+I = [P0, P0 ∩ Pa]
 
-hs = HybridSystem(A, S, In, Gu, Re, Sw)
+hs = HybridSystem(A, S, I, Gu, Re, Sw)
