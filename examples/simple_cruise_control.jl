@@ -28,7 +28,7 @@ Pb = polyhedron(SimpleHRepresentation([1. 0], [vb]), CDDLibrary())
 is = DiscreteIdentitySystem(2)
 #s = DiscreteLinearControlSystem([1. 0; 0 1], reshape([1.; 0], 2, 1), U)
 const h = 0.4
-s = DiscreteLinearControlSystem([1 h; 0 0], reshape([0; h], 2, 1))
+s = DiscreteLinearControlSystem([1 h; 0 0], reshape([0; h], 2, 1)) # TODO [0; 1] should be equivalent and more correct
 
 sw = AutonomousSwitching()
 

@@ -1,5 +1,5 @@
 export AbstractSystem, AbstractDiscreteSystem, AbstractContinuousSystem
-export DiscreteIdentitySystem, DiscreteLinearControlSystem, DiscreteLinearAlgebraicSystem
+export DiscreteIdentitySystem, DiscreteLinearSystem, DiscreteLinearControlSystem, DiscreteLinearAlgebraicSystem
 
 export statedim, inputdim
 abstract type AbstractSystem end
@@ -40,7 +40,7 @@ Discrete-time linear system of the form
 x_{k+1} = A x_k.
 ```
 """
-struct DiscreteLinearSystem{T, MT<: AbstractMatrix{T}} <: AbstractSystem
+struct DiscreteLinearSystem{T, MT<: AbstractMatrix{T}} <: AbstractDiscreteSystem
     A::MT
 end
 DiscreteLinearSystem{T, MT<: AbstractMatrix{T}}(A::MT) = DiscreteLinearSystem{T, MT}(A)
@@ -56,7 +56,7 @@ x_{k+1} = A x_k + B u_k
 ```
 where ``u_k \\in U``.
 """
-struct DiscreteLinearControlSystem{T, MT<: AbstractMatrix{T}, UT} <: AbstractSystem
+struct DiscreteLinearControlSystem{T, MT<: AbstractMatrix{T}, UT} <: AbstractDiscreteSystem
     A::MT
     B::MT
     U::UT
