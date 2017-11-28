@@ -8,7 +8,7 @@ using HybridSystems
 using Polyhedra
 using CDDLib
 
-function cruise_control_example(N, with_trailer; v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, h = 0.4)
+function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, h = 0.4)
     G = LightAutomaton(N)
     if N == 1
         add_transition!(G, 1, 1, 1)
@@ -25,25 +25,28 @@ function cruise_control_example(N, with_trailer; v = (15.6, 24.5), U = 4, D = 0.
         add_transition!(G, 6, 7, 1)
     end
 
+    function Pv(v, maxspeed)
+        s = maxspeed ? 1. : -1.
+        if with_trailer
+            polyhedron(SimpleHRepresentation([0 s 0 0
+                                              0 0 s 0], [s*v, s*v]), CDDLibrary())
+        else
+            polyhedron(SimpleHRepresentation([s 0], [s*v]), CDDLibrary())
+        end
+    end
     if with_trailer
         P0 = polyhedron(SimpleHRepresentation([-1. 0  0  0;
                                                 1  0  0  0;
-                                                0 -1  0  0;
-                                                0  1  0  0;
-                                                0  0 -1  0;
-                                                0  0  1  0;
                                                 0  0  0 -1;
                                                 0  0  0  1],
-                                              [D, D, -5., 35, -5, 35, U, U]), CDDLibrary())
-        Pa = polyhedron(SimpleHRepresentation([0 1. 0  0
-                                               0 0  1. 0], [v[1], v[1]]), CDDLibrary())
-        Pb = polyhedron(SimpleHRepresentation([0 1. 0  0
-                                               0 0  1. 0], [v[2], v[2]]), CDDLibrary())
+                                              [D, D, U, U]), CDDLibrary())
     else
-        P0 = polyhedron(SimpleHRepresentation([-1. 0; 1 0; 0 -1; 0 1], [0., 35, U, U]), CDDLibrary())
-        Pa = polyhedron(SimpleHRepresentation([1. 0], [v[1]]), CDDLibrary())
-        Pb = polyhedron(SimpleHRepresentation([1. 0], [v[2]]), CDDLibrary())
+        P0 = polyhedron(SimpleHRepresentation([0 -1.;
+                                               0  1.], [U, U]), CDDLibrary())
     end
+    Pvmin = Pv(vmin, false)
+    Pvmax = Pv(vmax, true)
+    Pvi = Pv.(v, true)
 
     d = with_trailer ? 4 : 2
     is = DiscreteIdentitySystem(with_trailer ? 4 : 2)
@@ -72,10 +75,11 @@ function cruise_control_example(N, with_trailer; v = (15.6, 24.5), U = 4, D = 0.
 
     #I = [P0, P0, P0, P0 ∩ Pa]
     #I = [P0, P0 ∩ Pa]
+    P1 = P0 ∩ Pvmin
     if N == 1
-        I = [P0 ∩ Pa]
+        I = [P1 ∩ Pvi[1]]
     elseif N == 2
-        I = [P0, P0 ∩ Pa]
+        I = [P1 ∩ Pvmax, P1 ∩ Pvi[1]]
     else
         error("TODO")
     end
