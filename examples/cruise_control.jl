@@ -8,7 +8,7 @@ using HybridSystems
 using Polyhedra
 using CDDLib
 
-function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, h = 0.4)
+function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, h = 0.4, sym=false)
     G = LightAutomaton(N)
     if N == 1
         add_transition!(G, 1, 1, 1)
@@ -44,9 +44,23 @@ function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.
         P0 = polyhedron(SimpleHRepresentation([0 -1.;
                                                0  1.], [U, U]), CDDLibrary())
     end
-    Pvmin = Pv(vmin, false)
-    Pvmax = Pv(vmax, true)
-    Pvi = Pv.(v, true)
+    if sym
+        Pvmax = Pv(vmax, true) ∩ Pv(vmax, false)
+        Pvi = Pv.(v, true) .∩ Pv.(v, false)
+        P1 = P0
+    else
+        Pvmax = Pv(vmax, true)
+        Pvi = Pv.(v, true)
+        Pvmin = Pv(vmin, false)
+        P1 = P0 ∩ Pvmin
+    end
+    if N == 1
+        I = [P1 ∩ Pvi[1]]
+    elseif N == 2
+        I = [P1 ∩ Pvmax, P1 ∩ Pvi[1]]
+    else
+        error("TODO")
+    end
 
     d = with_trailer ? 4 : 2
     is = DiscreteIdentitySystem(with_trailer ? 4 : 2)
@@ -72,17 +86,6 @@ function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.
     Gu = ConstantVector(fs, M)
     Re = ConstantVector(s, M)
     Sw = ConstantVector(sw, N)
-
-    #I = [P0, P0, P0, P0 ∩ Pa]
-    #I = [P0, P0 ∩ Pa]
-    P1 = P0 ∩ Pvmin
-    if N == 1
-        I = [P1 ∩ Pvi[1]]
-    elseif N == 2
-        I = [P1 ∩ Pvmax, P1 ∩ Pvi[1]]
-    else
-        error("TODO")
-    end
 
     HybridSystem(G, S, I, Gu, Re, Sw)
 end
