@@ -17,6 +17,8 @@ function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.
         add_transition!(G, 2, 2, 1)
     else
         @assert N == 7
+        # FIXME different nodes for different u if multiples outgoing edges
+        #       use approach in ADHS paper
         add_transition!(G, 2, 3, 1)
         add_transition!(G, 3, 4, 1)
         add_transition!(G, 4, 4, 1)
@@ -45,8 +47,8 @@ function cruise_control_example(N, with_trailer; vmin = 5., vmax = 35., v = (15.
                                                0  1.], [U, U]), CDDLibrary())
     end
     if sym
-        Pvmax = Pv(vmax, true) ∩ Pv(vmax, false)
-        Pvi = Pv.(v, true) .∩ Pv.(v, false)
+        Pvmax = Pv(vmax, true) ∩ Pv(-vmax, false)
+        Pvi = Pv.(v, true) .∩ Pv.(.-(v), false)
         P1 = P0
     else
         Pvmax = Pv(vmax, true)
