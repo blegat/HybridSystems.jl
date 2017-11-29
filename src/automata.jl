@@ -150,10 +150,10 @@ function rem_transition!(A::LightAutomaton, t)
 end
 
 function rem_state!(A::LightAutomaton, st)
-    for t in in_transitions(A, s)
+    for t in in_transitions(A, st)
         rem_transition!(A, t)
     end
-    for t in out_transitions(A, s)
+    for t in out_transitions(A, st)
         rem_transition!(A, t)
     end
     rem_vertex!(A.G, st)
