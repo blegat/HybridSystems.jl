@@ -1,6 +1,6 @@
 export LightAutomaton, AbstractAutomaton, OneStateAutomaton
 export states, modes, nstates, nmodes, transitions, ntransitions
-export source, event, symbol, target
+export source, event, symbol, target, transitiontype
 export add_transition!, has_transition, rem_transition!, rem_state!
 export in_transitions, out_transitions
 
@@ -23,6 +23,13 @@ It has the alias `nmodes`.
 """
 function nstates end
 const nmodes = nstates
+
+"""
+    transitiontype(A::AbstractAutomaton)
+
+Returns type of the transitions of the automaton `A`.
+"""
+function transitiontype end
 
 """
     transitions(A::AbstractAutomaton)
@@ -107,6 +114,7 @@ end
 
 states(A::OneStateAutomaton) = Base.OneTo(1)
 nstates(A::OneStateAutomaton) = 1
+transitiontype(A::OneStateAutomaton) = Int
 transitions(A::OneStateAutomaton) = Base.OneTo(A.nt)
 ntransitions(A::OneStateAutomaton) = A.nt
 source(::OneStateAutomaton, t::Int) = 1
@@ -130,6 +138,7 @@ end
 states(A::LightAutomaton) = vertices(A.G)
 nstates(A::LightAutomaton) = nv(A.G)
 
+transitiontype(A::LightAutomaton) = edgetype(A.G)
 transitions(A::LightAutomaton) = edges(A.G)
 ntransitions(A::LightAutomaton) = ne(A.G)
 

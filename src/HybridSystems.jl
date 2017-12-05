@@ -26,7 +26,7 @@ end
 # The hybrid system both acts like an automaton and a system
 
 # Automaton
-for f in (:states, :nstates, :transitions, :ntransitions, :source, :event, :target, :has_transition, :in_transitions, :out_transitions)
+for f in (:states, :nstates, :transitiontype, :transitions, :ntransitions, :source, :event, :target, :has_transition, :in_transitions, :out_transitions)
     @eval begin
         $f(hs::HybridSystem, args...) = $f(hs.automaton, args...)
     end
