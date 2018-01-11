@@ -1,9 +1,9 @@
 # HybridSystems
 
-| **Documentation** |
-|:-----------------:|
-| [![][docs-stable-img]][docs-stable-url] |
-| [![][docs-latest-img]][docs-latest-url] |
+| **Documentation** | **Build Status** |
+|:-----------------:|:----------------:|
+| [![][docs-stable-img]][docs-stable-url] | [![Build Status][build-img]][build-url] |
+| [![][docs-latest-img]][docs-latest-url] |                                         |
 
 This packages defines an interface for defining and working with [Hybrid Systems](https://en.wikipedia.org/wiki/Hybrid_system).
 It also includes an implementation of this interface.
@@ -26,3 +26,6 @@ The following package implements algorithms using this interface:
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
 [docs-stable-url]: https://blegat.github.io/HybridSystems.jl/stable/index.html
 [docs-latest-url]: https://blegat.github.io/HybridSystems.jl/latest/index.html
+
+[build-img]: https://travis-ci.org/blegat/HybridSystems.jl.svg?branch=master
+[build-url]: https://travis-ci.org/blegat/HybridSystems.jl
