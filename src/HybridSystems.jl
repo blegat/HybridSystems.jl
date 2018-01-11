@@ -54,8 +54,6 @@ A hybrid system modelled as a hybrid automaton.
 
 - `automaton`  -- hybrid automaton
 - `modes`      -- vector of modes
-- `invariants` -- vector of invariants
-- `guards`     -- vector of guards
 - `resetmaps`  -- vector of reset maps
 - `switchings` -- vector of switchings
 - `ext`        -- dictionary that can be used by extensions
