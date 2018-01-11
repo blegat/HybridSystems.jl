@@ -4,6 +4,11 @@ export source, event, symbol, target, transitiontype
 export add_transition!, has_transition, rem_transition!, rem_state!
 export in_transitions, out_transitions
 
+"""
+    AbstractAutomaton
+
+Abstract type for a hybrid automaton.
+"""
 abstract type AbstractAutomaton end
 
 """
@@ -125,6 +130,16 @@ out_transitions(A::OneStateAutomaton, s) = transitions(A)
 
 using LightGraphs
 
+"""
+    LightAutomaton{GT, ET} <: AbstractAutomaton
+
+A hybrid automaton that uses the `LightGraphs` backend.
+
+###  Fields
+
+- `G` -- graph whose vertices determine the states
+- `Σ` -- dictionary that defines the state transition graph
+"""
 struct LightAutomaton{GT, ET} <: AbstractAutomaton
     G::GT
     Σ::Dict{ET, Int}

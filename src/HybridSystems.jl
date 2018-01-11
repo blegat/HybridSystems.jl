@@ -7,8 +7,28 @@ include("switchings.jl")
 
 export AbstractHybridSystem, HybridSystem
 
+"""
+    AbstractHybridSystem
+
+Abstract supertype for a hybrid system.
+"""
 abstract type AbstractHybridSystem <: AbstractSystem end
 
+"""
+    HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem
+
+A hybrid system modelled as a hybrid automaton.
+
+### Fields
+
+- `automaton`  -- hybrid automaton
+- `modes`      -- vector of modes
+- `invariants` -- vector of invariants
+- `guards`     -- vector of guards
+- `resetmaps`  -- vector of reset maps
+- `switchings` -- vector of switchings
+- `ext`        -- dictionary that can be used by extensions
+"""
 struct HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem
     automaton::A
     modes::AbstractVector{S}
