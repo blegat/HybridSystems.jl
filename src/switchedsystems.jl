@@ -1,8 +1,8 @@
 export discreteswitchedsystem, DiscreteSwitchedLinearSystem, StateDepDiscreteSwitchedLinearSystem, ConstrainedDiscreteSwitchedLinearSystem
 
-const DiscreteSwitchedLinearSystem = HybridSystem{OneStateAutomaton, <:DiscreteIdentitySystem, FullSpace, FullSpace, <:DiscreteLinearSystem, AutonomousSwitching}
-const StateDepDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:DiscreteIdentitySystem, <:Any, <:Any, <:DiscreteLinearSystem, AutonomousSwitching}
-const ConstrainedDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:DiscreteIdentitySystem, FullSpace, FullSpace, <:DiscreteLinearSystem, AutonomousSwitching}
+const DiscreteSwitchedLinearSystem = HybridSystem{OneStateAutomaton, <:DiscreteIdentitySystem, <:LinearDiscreteSystem, AutonomousSwitching}
+const StateDepDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:ConstrainedDiscreteIdentitySystem, <:ConstrainedLinearDiscreteSystem, AutonomousSwitching}
+const ConstrainedDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:DiscreteIdentitySystem, <:LinearDiscreteSystem, AutonomousSwitching}
 
 """
     discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix})
@@ -37,16 +37,23 @@ x_{k+1} = A_{\\sigma_k} x_k, x_k \\in S[q_k]
 ```
 where ``q_0, \\sigma_1, q_1, \\ldots, q_{k-1}, \\sigma_k, q_k`` is a valid sequence of events of the automaton `G` with intermediate states ``q_0, \\ldots, q_k``.
 """
-function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::AbstractAutomaton=OneStateAutomaton(length(A)), S=ConstantVector(FullSpace(), nstates(G)); kws...)
+function discreteswitchedsystem end
+function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::AbstractAutomaton=OneStateAutomaton(length(A)); kws...)
     n = nstates(G)
     modes = DiscreteIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)))
     rm = DiscreteLinearSystem.(A)
-    guards = _guards(A, G, S)
     sw = ConstantVector(AutonomousSwitching(), n)
-    HybridSystem(G, modes, S, guards, rm, sw, Dict{Symbol, Any}(kws))
+    HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
+end
+function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::AbstractAutomaton, S::AbstractVector; kws...)
+    n = nstates(G)
+    modes = ConstrainedDiscreteIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)), S)
+    guards = _guards(A, G, S)
+    rm = ConstrainedDiscreteLinearSystem.(A, guards)
+    sw = ConstantVector(AutonomousSwitching(), n)
+    HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
 end
 function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, S::AbstractVector; kws...)
-    @assert length(A) == length(S)
     G = LightAutomaton(length(A))
     for σ in 1:length(A)
         for σnext in 1:length(A)

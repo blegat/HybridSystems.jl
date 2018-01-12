@@ -1,9 +1,10 @@
 module HybridSystems
 
 include("automata.jl")
-include("systems.jl")
 include("maps.jl")
 include("switchings.jl")
+
+using Systems
 
 export AbstractHybridSystem, HybridSystem
 
@@ -12,7 +13,7 @@ export AbstractHybridSystem, HybridSystem
 
 Abstract supertype for a hybrid system.
 """
-abstract type AbstractHybridSystem <: AbstractSystem end
+abstract type AbstractHybridSystem <: Systems.AbstractSystem end
 
 """
     HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem
@@ -23,24 +24,20 @@ A hybrid system modelled as a hybrid automaton.
 
 - `automaton`  -- hybrid automaton
 - `modes`      -- vector of modes
-- `invariants` -- vector of invariants
-- `guards`     -- vector of guards
 - `resetmaps`  -- vector of reset maps
 - `switchings` -- vector of switchings
 - `ext`        -- dictionary that can be used by extensions
 """
-struct HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem
+struct HybridSystem{A, S, R, W} <: AbstractHybridSystem
     automaton::A
     modes::AbstractVector{S}
-    invariants::AbstractVector{I}
-    guards::AbstractVector{G}
     resetmaps::AbstractVector{R}
     switchings::AbstractVector{W}
     # Can be used by extensions
     ext::Dict{Symbol, Any}
 end
-function HybridSystem(a, m, i, g, r, s)
-    HybridSystem(a, m, i, g, r, s, Dict{Symbol, Any}())
+function HybridSystem(a, m, r, s)
+    HybridSystem(a, m, r, s, Dict{Symbol, Any}())
 end
 
 # The hybrid system both acts like an automaton and a system
@@ -53,7 +50,7 @@ for f in (:states, :nstates, :transitiontype, :transitions, :ntransitions, :sour
 end
 
 # System
-statedim(hs::HybridSystem, s) = statedim(hs.modes[s])
+Systems.statedim(hs::HybridSystem, s) = statedim(hs.modes[s])
 
 function Base.show(io::IO, hs::HybridSystem)
     print(io, "Hybrid System with automaton ")
