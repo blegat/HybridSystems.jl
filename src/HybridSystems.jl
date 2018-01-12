@@ -6,36 +6,6 @@ include("switchings.jl")
 
 using Systems
 
-export DiscreteIdentitySystem, ConstrainedDiscreteIdentitySystem
-
-"""
-    DiscreteIdentitySystem <: AbstractDiscreteSystem
-
-Trivial identity discrete-time system of the form
-```math
-x_{k+1} = x_k.
-```
-"""
-struct DiscreteIdentitySystem <: AbstractDiscreteSystem
-    statedim::Int
-end
-Systems.statedim(s::DiscreteIdentitySystem) = s.statedim
-
-"""
-    ConstrainedDiscreteIdentitySystem <: AbstractDiscreteSystem
-
-Trivial identity discrete-time system of the form
-```math
-x_{k+1} = x_k.
-```
-"""
-struct ConstrainedDiscreteIdentitySystem{ST} <: AbstractDiscreteSystem
-    statedim::Int
-    X::ST
-end
-Systems.statedim(s::ConstrainedDiscreteIdentitySystem) = s.statedim
-
-
 export AbstractHybridSystem, HybridSystem
 
 """
