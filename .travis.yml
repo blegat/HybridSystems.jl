@@ -27,6 +27,7 @@ matrix:
 
 before_script:
   - julia -e 'Pkg.clone("https://github.com/JuliaReach/Systems.jl.git")'
+  - julia -e 'Pkg.clone("https://github.com/JuliaPolyhedra/Polyhedra.jl.git")'
 
 ## uncomment the following lines to override the default test script
 #script:

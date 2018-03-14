@@ -117,14 +117,23 @@ struct OneStateAutomaton <: AbstractAutomaton
     nt::Int
 end
 
+"""
+    OneStateTransition
+
+Transition of `OneStateAutomaton` with label `σ`.
+"""
+struct OneStateTransition
+    σ::Int
+end
+
 states(A::OneStateAutomaton) = Base.OneTo(1)
 nstates(A::OneStateAutomaton) = 1
-transitiontype(A::OneStateAutomaton) = Int
-transitions(A::OneStateAutomaton) = Base.OneTo(A.nt)
+transitiontype(A::OneStateAutomaton) = OneStateTransition
+transitions(A::OneStateAutomaton) = OneStateTransition.(Base.OneTo(A.nt))
 ntransitions(A::OneStateAutomaton) = A.nt
-source(::OneStateAutomaton, t::Int) = 1
-event(::OneStateAutomaton, t::Int) = t
-target(::OneStateAutomaton, t::Int) = 1
+source(::OneStateAutomaton, t::OneStateTransition) = 1
+event(::OneStateAutomaton, t::OneStateTransition) = t.σ
+target(::OneStateAutomaton, t::OneStateTransition) = 1
 in_transitions(A::OneStateAutomaton, s) = transitions(A)
 out_transitions(A::OneStateAutomaton, s) = transitions(A)
 
@@ -188,8 +197,8 @@ event(A::LightAutomaton, t::Edge) = A.Σ[t]
 target(::LightAutomaton, t::Edge) = t.dst
 
 function in_transitions(A::LightAutomaton, s)
-    Edge.(in_neighbors(A.G, s), s)
+    Edge.(inneighbors(A.G, s), s)
 end
 function out_transitions(A::LightAutomaton, s)
-    Edge.(s, out_neighbors(A.G, s))
+    Edge.(s, outneighbors(A.G, s))
 end

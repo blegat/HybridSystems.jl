@@ -50,7 +50,48 @@ for f in (:states, :nstates, :transitiontype, :transitions, :ntransitions, :sour
 end
 
 # System
-Systems.statedim(hs::HybridSystem, s) = statedim(hs.modes[s])
+export statedim, stateset, inputdim, inputset
+"""
+    statedim(hs::HybridSystem, u::Int)
+
+Returns the dimension of the state space of the system at mode `u`.
+"""
+Systems.statedim(hs::HybridSystem, u::Int) = statedim(hs.modes[u])
+
+"""
+    stateset(s::AbstractSystem, u::Int)
+
+Returns the set of allowed states of the system at mode `u`.
+"""
+Systems.stateset(hs::HybridSystem, u::Int) = stateset(hs.modes[u])
+
+"""
+    stateset(s::AbstractSystem, t)
+
+Returns the guard for the transition `t`.
+"""
+Systems.stateset(hs::HybridSystem, t) = stateset(hs.resetmaps[symbol(hs, t)])
+
+"""
+    inputdim(s::AbstractSystem, u::Int)
+
+Returns the dimension of the input space of the system at mode `u`.
+"""
+Systems.inputdim(hs::HybridSystem, u::Int) = inputdim(hs.modes[u])
+
+"""
+    inputset(s::AbstractSystem, u::Int)
+
+Returns the set of allowed inputs of the system at mode `u`.
+"""
+Systems.inputset(hs::HybridSystem, u::Int) = inputset(hs.modes[u])
+
+"""
+    inputset(s::AbstractSystem, t)
+
+Returns the st of allowed inputs for the transition `t`.
+"""
+Systems.inputset(hs::HybridSystem, t) = inputset(hs.resetmaps[symbol(hs, t)])
 
 function Base.show(io::IO, hs::HybridSystem)
     print(io, "Hybrid System with automaton ")
