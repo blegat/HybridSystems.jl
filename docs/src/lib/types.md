@@ -26,6 +26,7 @@ HybridSystem
 ```@docs
 AbstractAutomaton
 OneStateAutomaton
+OneStateTransition
 LightAutomaton
 ```
 

@@ -18,7 +18,7 @@ end
 
 The following method makes it easy to create specific kind of hybrid systems called switched systems
 ```@docs
-discreteswitchedsystems
+discreteswitchedsystem
 ```
 
 ## Continuous sub-systems
