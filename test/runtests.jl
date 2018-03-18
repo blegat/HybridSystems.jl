@@ -29,8 +29,15 @@ simplex = convexhull([0, 0], [0, 1], [1, 0])
     @test nstates(s) == 1
     @test states(s) == Base.OneTo(1)
     @test statedim(s, 1) == 2
-    @test length(transitions(s)) == 2
     @test ntransitions(s) == 2
+    @test eltype(transitions(s)) == transitiontype(s)
+    @test transitions(s) == HybridSystems.OneStateTransition.([1, 2])
+    @test source.(s, transitions(s)) == [1, 1]
+    @test event.(s, transitions(s)) == [1, 2]
+    @test target.(s, transitions(s)) == [1, 1]
+    @test length(transitions(s)) == 2
+    @test in_transitions(s, 1) == HybridSystems.OneStateTransition.([1, 2])
+    @test out_transitions(s, 1) == HybridSystems.OneStateTransition.([1, 2])
 end
 
 @testset "State Dependent Switched System" begin
