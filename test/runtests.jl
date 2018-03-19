@@ -50,3 +50,14 @@ end
     @test length(transitions(s)) == 4
     @test ntransitions(s) == 4
 end
+
+@testset "State Dependent Switched System" begin
+    s = discreteswitchedsystem([ones(2, 2), zeros(2, 2)], ConstantVector(square, 2))
+    @test nstates(s) == 2
+    @test states(s) == 1:2
+    @test all(statedim.(s, states(s)) .== 2)
+    @test stateset(s, 1) === square
+    @test stateset(s, 2) === square
+    @test length(transitions(s)) == 4
+    @test ntransitions(s) == 4
+end
