@@ -12,6 +12,8 @@
 #    end
 #end
 
+using FillArrays
+
 ConeLyap(p::P, Q::Matrix{S}, b::Vector{S}, c, H) where {T, P<:AbstractPolynomial{T}, S} = ConeLyap{T, P, S}(p, Q, b, c, H)
 JuMP.getvalue(p::ConeLyap) = ConeLyap(getvalue(p.p), getvalue(p.Q), getvalue(p.b), p.c, p.H)
 ellipsoid(p::ConeLyap{T, P, JuMP.Variable}) where {T, P<:AbstractPolynomial{T}} = ellipsoid(getvalue(p))
@@ -59,7 +61,7 @@ function algebraiclift(s::DiscreteLinearControlSystem{T, MT, FullSpace}) where {
 end
 algebraiclift(s::DiscreteIdentitySystem) = s
 algebraiclift(S::AbstractVector) = algebraiclift.(S)
-algebraiclift(S::ConstantVector) = ConstantVector(algebraiclift(first(S)), length(S))
+algebraiclift(S::Fill) = Fill(algebraiclift(first(S)), length(S))
 function algebraiclift(h::HybridSystem)
     HybridSystem(h.automaton, algebraiclift(h.modes), h.invariants, h.guards, algebraiclift(h.resetmaps), h.switchings)
 end
@@ -87,7 +89,7 @@ function ATrp(p, x, A)
     y = x[1:size(B, 2)]
     p(x => r(A)' * y)
 end
-function lhs(p, x, Re::ConstantVector)
+function lhs(p, x, Re::Fill)
     # If it is not constant, I would be comparing dummy variables of different meaning
     ATrp(p, x, first(Re).A)
 end

@@ -3,6 +3,7 @@
 # Specification-guided controller synthesis for linear systems and safe linear-time temporal logic
 # Proceedings of the 16th international conference on Hybrid systems: computation and control, 2013
 
+using FillArrays
 using SemialgebraicSets
 using HybridSystems
 using Polyhedra
@@ -113,10 +114,10 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
 
     M = LightGraphs.ne(G.G)
 
-    S = ConstantVector(is, N)
-    Gu = ConstantVector(fs, M)
+    S = Fill(is, N)
+    Gu = Fill(fs, M)
     Re = [s1, s2]
-    Sw = ConstantVector(sw, N)
+    Sw = Fill(sw, N)
 
     HybridSystem(G, S, I, Gu, Re, Sw)
 end

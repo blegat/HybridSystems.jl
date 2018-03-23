@@ -98,8 +98,6 @@ function Base.show(io::IO, hs::HybridSystem)
     print(io, hs.automaton)
 end
 
-include("constantvector.jl")
-
 # Particular cases
 include("switchedsystems.jl")
 

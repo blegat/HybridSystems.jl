@@ -1,3 +1,4 @@
+using FillArrays
 using HybridSystems
 A = LightAutomaton(1)
 add_transition!(A, 1, 1, 1)
@@ -14,10 +15,10 @@ sw = AutonomousSwitching()
 using SemialgebraicSets
 fs = FullSpace()
 
-S = ConstantVector(is, 1)
-In = ConstantVector(H, 1)
-Gu = ConstantVector(fs, 1)
-Re = ConstantVector(s, 1)
-Sw = ConstantVector(sw, 1)
+S = Fill(is, 1)
+In = Fill(H, 1)
+Gu = Fill(fs, 1)
+Re = Fill(s, 1)
+Sw = Fill(sw, 1)
 
 hs = HybridSystem(A, S, In, Gu, Re, Sw)
