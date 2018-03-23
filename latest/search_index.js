@@ -105,14 +105,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.ConstantVector",
-    "page": "Types",
-    "title": "HybridSystems.ConstantVector",
-    "category": "type",
-    "text": "ConstantVector{T}\n\nConstant vector with the same element of type T at each entry.\n\n\n\n"
-},
-
-{
     "location": "lib/types.html#Constant-vector-1",
     "page": "Types",
     "title": "Constant vector",
