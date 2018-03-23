@@ -1,3 +1,4 @@
+using FillArrays
 export discreteswitchedsystem, DiscreteSwitchedLinearSystem, StateDepDiscreteSwitchedLinearSystem, ConstrainedDiscreteSwitchedLinearSystem
 
 const DiscreteSwitchedLinearSystem = HybridSystem{OneStateAutomaton, <:DiscreteIdentitySystem, <:LinearDiscreteSystem, AutonomousSwitching}
@@ -42,7 +43,7 @@ function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::Abstract
     n = nstates(G)
     modes = DiscreteIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)))
     rm = LinearDiscreteSystem.(A)
-    sw = ConstantVector(AutonomousSwitching(), n)
+    sw = Fill(AutonomousSwitching(), n)
     HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
 end
 function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::AbstractAutomaton, S::AbstractVector; kws...)
@@ -50,7 +51,7 @@ function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::Abstract
     modes = ConstrainedDiscreteIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)), S)
     guards = _guards(A, G, S)
     rm = ConstrainedLinearDiscreteSystem.(A, guards)
-    sw = ConstantVector(AutonomousSwitching(), n)
+    sw = Fill(AutonomousSwitching(), n)
     HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
 end
 function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, S::AbstractVector; kws...)
@@ -63,7 +64,7 @@ function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, S::Abstract
     discreteswitchedsystem(A, G, S; kws...)
 end
 
-_guards(A, G, S::ConstantVector) = ConstantVector(S[1], length(A))
+_guards(A, G, S::Fill) = Fill(S[1], length(A))
 function _guard(G::AbstractAutomaton, S::AbstractVector, σ)
     s = Nullable{eltype(S)}()
     for t in transitions(G)

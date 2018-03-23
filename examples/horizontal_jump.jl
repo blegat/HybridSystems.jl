@@ -1,3 +1,4 @@
+using FillArrays
 using Systems
 using HybridSystems
 using Polyhedra
@@ -22,7 +23,7 @@ function horizontal_jump_example(lib::PolyhedraLibrary, shift::Bool=false)
     Re = [s1, s2]
 
     sw = AutonomousSwitching()
-    Sw = ConstantVector(sw, 2)
+    Sw = Fill(sw, 2)
 
     HybridSystem(A, S, Re, Sw)
 end

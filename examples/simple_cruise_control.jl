@@ -5,6 +5,7 @@
 
 N = 2
 
+using FillArrays
 using HybridSystems
 A = LightAutomaton(N)
 add_transition!(A, 1, 2, 1)
@@ -37,10 +38,10 @@ fs = FullSpace()
 
 M = LightGraphs.ne(A.G)
 
-S = ConstantVector(is, N)
-Gu = ConstantVector(fs, M)
-Re = ConstantVector(s, M)
-Sw = ConstantVector(sw, N)
+S = Fill(is, N)
+Gu = Fill(fs, M)
+Re = Fill(s, M)
+Sw = Fill(sw, N)
 
 #I = [P0, P0, P0, P0 ∩ Pa]
 I = [P0, P0 ∩ Pa]

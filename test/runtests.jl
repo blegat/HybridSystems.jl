@@ -1,6 +1,7 @@
 using HybridSystems
 using Base.Test
 using Polyhedra
+using FillArrays
 
 @testset "Horizontal jump" begin
     include("../examples/horizontal_jump.jl")
@@ -52,7 +53,7 @@ end
 end
 
 @testset "State Dependent Switched System" begin
-    s = discreteswitchedsystem([ones(2, 2), zeros(2, 2)], ConstantVector(square, 2))
+    s = discreteswitchedsystem([ones(2, 2), zeros(2, 2)], Fill(square, 2))
     @test nstates(s) == 2
     @test states(s) == 1:2
     @test all(statedim.(s, states(s)) .== 2)
