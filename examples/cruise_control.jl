@@ -14,22 +14,19 @@ Hybrid System representing the speed of a truck and its `M` trailers.
 The mass of the truck is `m0` and the mass of each trailer is `m`.
 The dynamic is discretized over step sizes of length `h`.
 """
-function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = getlibraryfor(2M+2, Float64))
+function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = Polyhedra.default_library(FullDim{2M+2}(), Float64))
     function Pv(v, maxspeed)
         s = maxspeed ? 1. : -1.
-        Pvi = polyhedron(SimpleHRepresentation([0 s], [s*v]), lib)
-        Pv0 = polyhedron(SimpleHRepresentation([s 0], [s*v]), lib)
+        Pvi = intersect(HyperPlane([0, s], s*v))
+        Pv0 = intersect(HyperPlane([s, 0], s*v))
         if M >= 1
             Pvi^M * Pv0
         else
             Pv0
         end
     end
-    PD = polyhedron(SimpleHRepresentation([-1. 0
-                                            1  0],
-                                          [D, D]), lib)
-    PU = polyhedron(SimpleHRepresentation([0 -1.;
-                                           0  1.], [U, U]), lib)
+    PD = HyperPlane([-1., 0], D) ∩ HyperPlane([1., 0], D)
+    PU = HyperPlane([0., -1], U) ∩ HyperPlane([0, 1.], U)
     if M >= 1
         P0 = PD^M * PU
     else
@@ -49,7 +46,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
     G = LightAutomaton(N)
     if N == 1
         add_transition!(G, 1, 1, 1)
-        I = [P1 ∩ Pvimax[1]]
+        safe_sets = [P1 ∩ Pvimax[1]]
     elseif N == 2
         add_transition!(G, 1, 2, 1)
         add_transition!(G, 2, 2, 1)
@@ -116,7 +113,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
 
     M = LightGraphs.ne(G.G)
 
-    S = ConstrainedDiscreteIdentitySystem.(d, safe_sets)
+    S = ConstrainedDiscreteIdentitySystem.(d, polyhedron.(safe_sets, lib))
     Re = [s1, s2]
     Sw = Fill(sw, N)
 
