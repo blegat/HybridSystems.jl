@@ -6,7 +6,6 @@
 using FillArrays
 using HybridSystems
 using Polyhedra
-using CDDLib
 
 """
     cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false)
@@ -15,11 +14,11 @@ Hybrid System representing the speed of a truck and its `M` trailers.
 The mass of the truck is `m0` and the mass of each trailer is `m`.
 The dynamic is discretized over step sizes of length `h`.
 """
-function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false)
+function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = getlibraryfor(2M+2, Float64))
     function Pv(v, maxspeed)
         s = maxspeed ? 1. : -1.
-        Pvi = polyhedron(SimpleHRepresentation([0 s], [s*v]), CDDLibrary())
-        Pv0 = polyhedron(SimpleHRepresentation([s 0], [s*v]), CDDLibrary())
+        Pvi = polyhedron(SimpleHRepresentation([0 s], [s*v]), lib)
+        Pv0 = polyhedron(SimpleHRepresentation([s 0], [s*v]), lib)
         if M >= 1
             Pvi^M * Pv0
         else
@@ -28,9 +27,9 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
     end
     PD = polyhedron(SimpleHRepresentation([-1. 0
                                             1  0],
-                                          [D, D]), CDDLibrary())
+                                          [D, D]), lib)
     PU = polyhedron(SimpleHRepresentation([0 -1.;
-                                           0  1.], [U, U]), CDDLibrary())
+                                           0  1.], [U, U]), lib)
     if M >= 1
         P0 = PD^M * PU
     else
