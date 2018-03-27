@@ -18,16 +18,16 @@ The dynamic is discretized over step sizes of length `h`.
 function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = Polyhedra.default_library(FullDim{2M+2}(), Float64))
     function Pv(v, maxspeed)
         s = maxspeed ? 1. : -1.
-        Pvi = intersect(HyperPlane([0, s], s*v))
-        Pv0 = intersect(HyperPlane([s, 0], s*v))
+        Pvi = intersect(HalfSpace([0, s], s*v))
+        Pv0 = intersect(HalfSpace([s, 0], s*v))
         if M >= 1
             Pvi^M * Pv0
         else
             Pv0
         end
     end
-    PD = HyperPlane([-1., 0], D) ∩ HyperPlane([1., 0], D)
-    PU = HyperPlane([0., -1], U) ∩ HyperPlane([0, 1.], U)
+    PD = HalfSpace([-1., 0], D) ∩ HalfSpace([1., 0], D)
+    PU = HalfSpace([0., -1], U) ∩ HalfSpace([0, 1.], U)
     if M >= 1
         P0 = PD^M * PU
     else
