@@ -30,8 +30,10 @@ OneStateTransition
 LightAutomaton
 ```
 
-## Constant vector
+## Switchings
 
 ```@docs
-ConstantVector
+AbstractSwitching
+AutonomousSwitching
+ControlledSwitching
 ```

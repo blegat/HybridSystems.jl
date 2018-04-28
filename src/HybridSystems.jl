@@ -25,7 +25,7 @@ A hybrid system modelled as a hybrid automaton.
 - `automaton`  -- hybrid automaton
 - `modes`      -- vector of modes
 - `resetmaps`  -- vector of reset maps
-- `switchings` -- vector of switchings
+- `switchings` -- vector of switchings, see [`AbstractSwitching`](@ref)
 - `ext`        -- dictionary that can be used by extensions
 """
 struct HybridSystem{A, S, R, W} <: AbstractHybridSystem
