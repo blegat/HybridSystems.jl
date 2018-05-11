@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Types",
     "title": "HybridSystems.HybridSystem",
     "category": "type",
-    "text": "HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem\n\nA hybrid system modelled as a hybrid automaton.\n\nFields\n\nautomaton  – hybrid automaton\nmodes      – vector of modes\nresetmaps  – vector of reset maps\nswitchings – vector of switchings\next        – dictionary that can be used by extensions\n\n\n\n"
+    "text": "HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem\n\nA hybrid system modelled as a hybrid automaton.\n\nFields\n\nautomaton  – hybrid automaton\nmodes      – vector of modes\nresetmaps  – vector of reset maps\nswitchings – vector of switchings, see AbstractSwitching\next        – dictionary that can be used by extensions\n\n\n\n"
 },
 
 {
@@ -105,11 +105,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#Constant-vector-1",
+    "location": "lib/types.html#HybridSystems.AbstractSwitching",
     "page": "Types",
-    "title": "Constant vector",
+    "title": "HybridSystems.AbstractSwitching",
+    "category": "type",
+    "text": "AbstractSwitching\n\nNature of the switching, e.g. AutonomousSwitching or ControlledSwitching, see Section 1.1.3 of [1]\n\n[1] Liberzon, D. Switching in systems and control. Springer Science & Business Media, 2012\n\n\n\n"
+},
+
+{
+    "location": "lib/types.html#HybridSystems.AutonomousSwitching",
+    "page": "Types",
+    "title": "HybridSystems.AutonomousSwitching",
+    "category": "type",
+    "text": "AutonomousSwitching <: AbstractSwitching\n\nControlled switching, the switching signal is autonomous.\n\n\n\n"
+},
+
+{
+    "location": "lib/types.html#HybridSystems.ControlledSwitching",
+    "page": "Types",
+    "title": "HybridSystems.ControlledSwitching",
+    "category": "type",
+    "text": "ControlledSwitching <: AbstractSwitching\n\nControlled switching, the switching signal is controlled.\n\n\n\n"
+},
+
+{
+    "location": "lib/types.html#Switchings-1",
+    "page": "Types",
+    "title": "Switchings",
     "category": "section",
-    "text": "ConstantVector"
+    "text": "AbstractSwitching\nAutonomousSwitching\nControlledSwitching"
 },
 
 {
@@ -145,33 +169,33 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Systems.statedim",
+    "location": "lib/methods.html#MathematicalSystems.statedim",
     "page": "Methods",
-    "title": "Systems.statedim",
+    "title": "MathematicalSystems.statedim",
     "category": "function",
     "text": "statedim(hs::HybridSystem, u::Int)\n\nReturns the dimension of the state space of the system at mode u.\n\n\n\n"
 },
 
 {
-    "location": "lib/methods.html#Systems.stateset",
+    "location": "lib/methods.html#MathematicalSystems.stateset",
     "page": "Methods",
-    "title": "Systems.stateset",
+    "title": "MathematicalSystems.stateset",
     "category": "function",
     "text": "stateset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed states of the system at mode u.\n\n\n\nstateset(s::AbstractSystem, t)\n\nReturns the guard for the transition t.\n\n\n\n"
 },
 
 {
-    "location": "lib/methods.html#Systems.inputdim",
+    "location": "lib/methods.html#MathematicalSystems.inputdim",
     "page": "Methods",
-    "title": "Systems.inputdim",
+    "title": "MathematicalSystems.inputdim",
     "category": "function",
     "text": "inputdim(s::AbstractSystem, u::Int)\n\nReturns the dimension of the input space of the system at mode u.\n\n\n\n"
 },
 
 {
-    "location": "lib/methods.html#Systems.inputset",
+    "location": "lib/methods.html#MathematicalSystems.inputset",
     "page": "Methods",
-    "title": "Systems.inputset",
+    "title": "MathematicalSystems.inputset",
     "category": "function",
     "text": "inputset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed inputs of the system at mode u.\n\n\n\ninputset(s::AbstractSystem, t)\n\nReturns the st of allowed inputs for the transition t.\n\n\n\n"
 },
