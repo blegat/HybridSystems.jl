@@ -4,7 +4,7 @@
 # Proceedings of the 16th international conference on Hybrid systems: computation and control, 2013
 
 using FillArrays
-using Systems
+using MathematicalSystems
 using HybridSystems
 using Polyhedra
 
