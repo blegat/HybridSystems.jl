@@ -1,7 +1,7 @@
-using HybridSystems
-using Base.Test
-using Polyhedra
+using Compat, Compat.Test
 using FillArrays
+using HybridSystems
+using Polyhedra
 
 @testset "Switched System" begin
     square = convexhull([1, 1], [-1, 1], [-1, -1], [1, -1])
@@ -55,13 +55,13 @@ end
             @test states(s) == 1:2
             for u in states(s)
                 @test statedim(s, u) == 2
-                @test stateset(s, u) isa Polyhedra.SimplePolyhedron{2,Float64}
+                @test stateset(s, u) isa Polyhedra.SimplePolyhedron{Float64}
             end
             @test length(transitions(s)) == 2
             @test ntransitions(s) == 2
             for t in transitions(s)
-                @test stateset(s, t) isa Polyhedra.SimplePolyhedron{2,Float64}
-                @test inputset(s, t) isa Polyhedra.SimplePolyhedron{1,Float64}
+                @test stateset(s, t) isa Polyhedra.SimplePolyhedron{Float64}
+                @test inputset(s, t) isa Polyhedra.SimplePolyhedron{Float64}
             end
         end
     end

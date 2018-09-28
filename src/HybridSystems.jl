@@ -40,6 +40,10 @@ function HybridSystem(a, m, r, s)
     HybridSystem(a, m, r, s, Dict{Symbol, Any}())
 end
 
+if VERSION >= v"0.7-"
+    Base.broadcastable(hs::HybridSystem) = Ref(hs)
+end
+
 # The hybrid system both acts like an automaton and a system
 
 # Automaton
