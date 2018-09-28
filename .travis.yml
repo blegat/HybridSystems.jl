@@ -4,7 +4,6 @@ os:
   - linux
   - osx
 julia:
-  - 0.6
   - 0.7
   - 1.0
 notifications:
@@ -18,9 +17,9 @@ matrix:
   allow_failures:
   - julia: nightly
 before_script:
-  - julia -e 'if VERSION >= v"0.7-"; using Pkg; Pkg.add(PackageSpec(name="JuMP", rev="master")); else Pkg.add("JuMP"); Pkg.checkout("JuMP"); end'
-  - julia -e 'if VERSION >= v"0.7-"; using Pkg; Pkg.add(PackageSpec(name="Polyhedra", rev="master")); else Pkg.add("Polyhedra"); Pkg.checkout("Polyhedra"); end'
-  - julia -e 'if VERSION >= v"0.7-"; using Pkg; Pkg.add(PackageSpec(name="MathematicalSystems", rev="master")); else Pkg.add("MathematicalSystems"); Pkg.checkout("MathematicalSystems"); end'
+  - julia -e 'using Pkg; Pkg.add(PackageSpec(name="JuMP", rev="master"))'
+  - julia -e 'using Pkg; Pkg.add(PackageSpec(name="Polyhedra", rev="master"))'
+  - julia -e 'using Pkg; Pkg.add(PackageSpec(name="MathematicalSystems", rev="master"))'
 after_success:
   # push coverage results to Coveralls
   - julia -e 'cd(Pkg.dir("HybridSystems")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
