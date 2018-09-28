@@ -3,7 +3,9 @@
 # Specification-guided controller synthesis for linear systems and safe linear-time temporal logic
 # Proceedings of the 16th international conference on Hybrid systems: computation and control, 2013
 
+using Compat, Compat.LinearAlgebra
 using FillArrays
+import LightGraphs
 using MathematicalSystems
 using HybridSystems
 using Polyhedra
@@ -15,13 +17,13 @@ Hybrid System representing the speed of a truck and its `M` trailers.
 The mass of the truck is `m0` and the mass of each trailer is `m`.
 The dynamic is discretized over step sizes of length `h`.
 """
-function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = Polyhedra.default_library(FullDim{2M+2}(), Float64))
+function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = Polyhedra.default_library(2M+2, Float64))
     function Pv(v, maxspeed)
         s = maxspeed ? 1. : -1.
         Pvi = intersect(HalfSpace([0, s], s*v))
         Pv0 = intersect(HalfSpace([s, 0], s*v))
         if M >= 1
-            Pvi^M * Pv0
+            Base.power_by_squaring(Pvi, M) * Pv0
         else
             Pv0
         end
@@ -29,7 +31,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
     PD = HalfSpace([-1., 0], D) ∩ HalfSpace([1., 0], D)
     PU = HalfSpace([0., -1], U) ∩ HalfSpace([0, 1.], U)
     if M >= 1
-        P0 = PD^M * PU
+        P0 = Base.power_by_squaring(PD, M) * PU
     else
         P0 = PU
     end
@@ -54,7 +56,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
         safe_sets = [P1 ∩ Pv0max, P1 ∩ Pvimax[1]]
     else
         @assert N == 1 + (T+1) * length(v)
-        safe_sets = Vector{typeof(P1)}(N)
+        safe_sets = Vector{typeof(P1)}(undef, N)
         function new_speed_signal!(u)
             for (j, vj) in enumerate(v)
                 w = (T+1)*(j-1) + T+1
@@ -102,12 +104,12 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
     A[d-1, 1]   =  ks/m0
     A[d-1, d-1] = -kd/m0
     A[d-1, 2]   =  kd/m0
-    A1 = [eye(d-1)+h*A [zeros(d-2); h]
+    A1 = [I+h*A [zeros(d-2); h]
           zeros(d-1)'  0]
     B = reshape([zeros(d-1); 1.], d, 1)
     s1 = LinearControlDiscreteSystem(A1, B)
-    A2 = [eye(d-1)     zeros(d-1)
-          zeros(d-1)'  0]
+    A2 = [Matrix(1.0I, d-1, d-1) zeros(d-1)
+          zeros(d-1)'            0]
     s2 = LinearControlDiscreteSystem(A2, B)
 
     sw = AutonomousSwitching()

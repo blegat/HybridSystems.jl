@@ -66,19 +66,19 @@ end
 
 _guards(A, G, S::Fill) = Fill(S[1], length(A))
 function _guard(G::AbstractAutomaton, S::AbstractVector, σ)
-    s = Nullable{eltype(S)}()
+    s = nothing
     for t in transitions(G)
         if symbol(G, t) == σ
             st = S[source(G, t)]
-            if isnull(s)
-                s = Nullable{eltype(S)}(st)
+            if s === nothing
+                s = st
             else
-                @assert get(s) === st
+                @assert s === st
             end
         end
     end
-    @assert !isnull(s)
-    get(s)
+    @assert s !== nothing
+    return s
 end
 _guards(A, G, S::AbstractVector) = map(σ -> _guard(G, S, σ), 1:length(A))
 function _getstatedim(A, G, s)
