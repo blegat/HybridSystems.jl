@@ -47,6 +47,15 @@ using Polyhedra
 end
 
 @testset "Examples" begin
+    @testset "Square" begin
+        include("../examples/square.jl")
+        s = square_example(Polyhedra.DefaultLibrary{Float64}())
+        @test nstates(s) == 1
+        @test states(s) == 1:1
+        @test statedim(s, 1) == 2
+        @test stateset(s, 1) isa Polyhedra.DefaultPolyhedron{Float64}
+        @test inputdim(s, 1) == 0
+    end
     @testset "Horizontal jump" begin
         include("../examples/horizontal_jump.jl")
         for shift in (false, true)
