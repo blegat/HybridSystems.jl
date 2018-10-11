@@ -17,7 +17,7 @@ Hybrid System representing the speed of a truck and its `M` trailers.
 The mass of the truck is `m0` and the mass of each trailer is `m`.
 The dynamic is discretized over step sizes of length `h`.
 """
-function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::PolyhedraLibrary = Polyhedra.default_library(2M+2, Float64))
+function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false, lib::Polyhedra.Library = Polyhedra.default_library(2M+2, Float64))
     function Pv(v, maxspeed)
         s = maxspeed ? 1. : -1.
         Pvi = intersect(HalfSpace([0, s], s*v))

@@ -50,18 +50,18 @@ end
     @testset "Horizontal jump" begin
         include("../examples/horizontal_jump.jl")
         for shift in (false, true)
-            s = horizontal_jump_example(SimplePolyhedraLibrary{Float64}(), shift)
+            s = horizontal_jump_example(Polyhedra.DefaultLibrary{Float64}(), shift)
             @test nstates(s) == 2
             @test states(s) == 1:2
             for u in states(s)
                 @test statedim(s, u) == 2
-                @test stateset(s, u) isa Polyhedra.SimplePolyhedron{Float64}
+                @test stateset(s, u) isa Polyhedra.DefaultPolyhedron{Float64}
             end
             @test length(transitions(s)) == 2
             @test ntransitions(s) == 2
             for t in transitions(s)
-                @test stateset(s, t) isa Polyhedra.SimplePolyhedron{Float64}
-                @test inputset(s, t) isa Polyhedra.SimplePolyhedron{Float64}
+                @test stateset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
+                @test inputset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
             end
         end
     end
