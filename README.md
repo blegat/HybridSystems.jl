@@ -20,6 +20,7 @@ The following package implements hybrid systems representations using this inter
 The following package implements algorithms using this interface:
 
 * [SwitchOnSafety](https://github.com/blegat/SwitchOnSafety.jl) : Computing invariant sets of hybrid systems.
+* [Reachability](https://github.com/JuliaReach/Reachability.jl) : Computing reachable states of hybrid dynamical systems.
 
 ## Documentation
 
