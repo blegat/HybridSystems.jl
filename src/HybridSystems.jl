@@ -16,15 +16,19 @@ Abstract supertype for a hybrid system.
 abstract type AbstractHybridSystem <: MathematicalSystems.AbstractSystem end
 
 """
-    HybridSystem{A, S, I, G, R, W} <: AbstractHybridSystem
+    HybridSystem{A, S, R, W} <: AbstractHybridSystem
 
 A hybrid system modelled as a hybrid automaton.
 
 ### Fields
 
 - `automaton`  -- hybrid automaton
-- `modes`      -- vector of modes
-- `resetmaps`  -- vector of reset maps
+- `modes`      -- vector of modes indexed by the discrete states,
+                  both the domain and the dynamic are stored in this field.
+                  See [`stateset`](@ref) to access the domain.
+- `resetmaps`  -- vector of reset maps indexed by the discrete states,
+                  the guard is stored as constraint of the map in this field.
+                  See [`stateset`](@ref) to access the guard.
 - `switchings` -- vector of switchings, see [`AbstractSwitching`](@ref)
 - `ext`        -- dictionary that can be used by extensions
 """

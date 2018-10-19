@@ -16,7 +16,6 @@ abstract type AbstractSwitching end
 
 Controlled switching, the switching signal is autonomous.
 """
-
 struct AutonomousSwitching <: AbstractSwitching end
 
 """
