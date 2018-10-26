@@ -167,16 +167,20 @@ use [`add_transition!`](@ref) to add transitions.
 To create an automaton with 2 nodes 1, 2, self-loops of labels 1, a transition
 from 1 to 2 with label 2 and transition from 2 to 1 with label 3, do the
 following:
-```julia
-a = LightAutomaton(2)
-# Add a self-loop of label 1 for state 1
-add_transition!(a, 1, 1, 1)
-# Add a self-loop of label 1 for state 2
-add_transition!(a, 2, 2, 1)
-# Add a transition from state 1 to state 2 with label 2
-add_transition!(a, 1, 2, 2)
-# Add a transition from state 2 to state 1 with label 3
-add_transition!(a, 2, 1, 3)
+```jldoctest
+julia> a = LightAutomaton(2);
+
+julia> add_transition!(a, 1, 1, 1) # Add a self-loop of label 1 for state 1
+Edge 1 => 1
+
+julia> add_transition!(a, 2, 2, 1) # Add a self-loop of label 1 for state 2
+Edge 2 => 2
+
+julia> add_transition!(a, 1, 2, 2) # Add a transition from state 1 to state 2 with label 2
+Edge 1 => 2
+
+julia> add_transition!(a, 2, 1, 3) # Add a transition from state 2 to state 1 with label 3
+Edge 2 => 1
 ```
 """
 function LightAutomaton(n::Int)
@@ -196,6 +200,7 @@ function add_transition!(A::LightAutomaton, q, r, σ)
     t = Edge(q, r)
     add_edge!(A.G, t)
     A.Σ[t] = σ
+    return t
 end
 # FIXME this is nonsense for multiples edges with different labels
 function has_transition(A::LightAutomaton, t)
