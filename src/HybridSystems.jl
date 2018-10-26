@@ -46,7 +46,7 @@ Additional data can be stored in the `ext` field.
 
 ## Examples
 
-See [the Thermostat example](https://github.com/blegat/HybridSystems.jl/blob/master/examples/Thermostat.jl).
+See [the Thermostat example](https://github.com/blegat/HybridSystems.jl/blob/master/examples/Thermostat.ipynb).
 """
 struct HybridSystem{A, S, R, W} <: AbstractHybridSystem
     automaton::A
