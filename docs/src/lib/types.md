@@ -21,13 +21,14 @@ AbstractHybridSystem
 HybridSystem
 ```
 
-## Hybrid automata
+## Automata
 
 ```@docs
 AbstractAutomaton
 OneStateAutomaton
 OneStateTransition
 LightAutomaton
+LightAutomaton(::Int)
 ```
 
 ## Switchings

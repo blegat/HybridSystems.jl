@@ -142,17 +142,43 @@ using LightGraphs
 """
     LightAutomaton{GT, ET} <: AbstractAutomaton
 
-A hybrid automaton that uses the `LightGraphs` backend.
+A hybrid automaton that uses the `LightGraphs` backend. See the constructor
+[`LightAutomaton(::Int)`](@ref).
 
 ###  Fields
 
-- `G` -- graph whose vertices determine the states
-- `Σ` -- dictionary that defines the state transition graph
+- `G` -- graph of type `GT` whose vertices determine the states
+- `Σ` -- dictionary mapping the edges to their labels
 """
 struct LightAutomaton{GT, ET} <: AbstractAutomaton
     G::GT
     Σ::Dict{ET, Int}
 end
+
+"""
+    LightAutomaton(n::Int)
+
+Creates a `LightAutomaton` with `n` states 1, 2, ..., `n`.
+The automaton is initialized without any transitions,
+use [`add_transition!`](@ref) to add transitions.
+
+## Examples
+
+To create an automaton with 2 nodes 1, 2, self-loops of labels 1, a transition
+from 1 to 2 with label 2 and transition from 2 to 1 with label 3, do the
+following:
+```julia
+a = LightAutomaton(2)
+# Add a self-loop of label 1 for state 1
+add_transition!(a, 1, 1, 1)
+# Add a self-loop of label 1 for state 2
+add_transition!(a, 2, 2, 1)
+# Add a transition from state 1 to state 2 with label 2
+add_transition!(a, 1, 2, 2)
+# Add a transition from state 2 to state 1 with label 3
+add_transition!(a, 2, 1, 3)
+```
+"""
 function LightAutomaton(n::Int)
     G = DiGraph(n)
     Σ = Dict{edgetype(G), Int}()
