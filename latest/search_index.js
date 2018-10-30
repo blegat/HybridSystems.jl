@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Types",
     "title": "HybridSystems.AbstractAutomaton",
     "category": "type",
-    "text": "AbstractAutomaton\n\nAbstract type for a hybrid automaton.\n\n\n\n\n\n"
+    "text": "AbstractAutomaton\n\nAbstract type for an automaton.\n\n\n\n\n\n"
 },
 
 {
@@ -293,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "HybridSystems.has_transition",
     "category": "function",
-    "text": "has_transition(A::AbstractAutomaton, t)\n\nReturns true if the automaton A has the transition t.\n\n\n\n\n\n"
+    "text": "has_transition(A::AbstractAutomaton, t::AbstractTransition)\n\nReturns true if the automaton A has the transition t.\n\n\n\n\n\n"
 },
 
 {
@@ -309,7 +309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "HybridSystems.source",
     "category": "function",
-    "text": "source(A::AbstractAutomaton, t)\n\nReturns the source of the transition t.\n\n\n\n\n\n"
+    "text": "source(A::AbstractAutomaton, t::AbstractTransition)\n\nReturns the source of the transition t.\n\n\n\n\n\n"
 },
 
 {
@@ -317,7 +317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "HybridSystems.event",
     "category": "function",
-    "text": "event(A::AbstractAutomaton, t)\n\nReturns the event/symbol of the transition t in the automaton A. It has the alias symbol.\n\n\n\n\n\n"
+    "text": "event(A::AbstractAutomaton, t::AbstractTransition)\n\nReturns the event/symbol of the transition t in the automaton A. It has the alias symbol.\n\n\n\n\n\n"
 },
 
 {
@@ -325,7 +325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "HybridSystems.target",
     "category": "function",
-    "text": "target(A::AbstractAutomaton, t)\n\nReturns the target of the transition t.\n\n\n\n\n\n"
+    "text": "target(A::AbstractAutomaton, t::AbstractTransition)\n\nReturns the target of the transition t.\n\n\n\n\n\n"
 },
 
 {
