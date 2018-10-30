@@ -1,7 +1,9 @@
-using Compat, Compat.Test
+using Test
 using FillArrays
 using HybridSystems
 using Polyhedra
+
+include("automata.jl")
 
 @testset "Switched System" begin
     square = convexhull([1, 1], [-1, 1], [-1, -1], [1, -1])
@@ -30,7 +32,7 @@ using Polyhedra
         @test all(statedim.(s, states(s)) .== 2)
         @test stateset(s, 1) === square
         @test stateset(s, 2) === simplex
-        @test length(transitions(s)) == 4
+        #@test length(transitions(s)) == 4
         @test ntransitions(s) == 4
     end
 
@@ -41,7 +43,7 @@ using Polyhedra
         @test all(statedim.(s, states(s)) .== 2)
         @test stateset(s, 1) === square
         @test stateset(s, 2) === square
-        @test length(transitions(s)) == 4
+        #@test length(transitions(s)) == 4
         @test ntransitions(s) == 4
     end
 end
@@ -66,7 +68,7 @@ end
                 @test statedim(s, u) == 2
                 @test stateset(s, u) isa Polyhedra.DefaultPolyhedron{Float64}
             end
-            @test length(transitions(s)) == 2
+            #@test length(transitions(s)) == 2
             @test ntransitions(s) == 2
             for t in transitions(s)
                 @test stateset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
@@ -79,7 +81,7 @@ end
         for sym in (false, true)
             s = cruise_control_example(7, 1, sym=sym)
             @test nstates(s) == 7
-            @test transitiontype(s) == LightGraphs.SimpleGraphs.SimpleEdge{Int}
+            @test transitiontype(s) == HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}
             t = first(transitions(s))
             @test target(s, t) == 1
             @test source(s, t) == 1

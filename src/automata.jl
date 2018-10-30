@@ -4,12 +4,37 @@ export source, event, symbol, target, transitiontype
 export add_transition!, has_transition, rem_transition!, rem_state!
 export in_transitions, out_transitions
 
+abstract type StateProperty{T} end
+function typed_map(T::Type, f::Function, sp::StateProperty)
+    new_sp = state_property(sp.automaton, T)
+    for s in states(sp.automaton)
+        new_sp[s] = f(sp[s])
+    end
+    return new_sp
+end
+
+abstract type TransitionProperty{T} end
+function typed_map(T::Type, f::Function, tp::TransitionProperty)
+    new_tp = transition_property(tp.automaton, T)
+    for t in transitions(tp.automaton)
+        new_tp[t] = f(tp[t])
+    end
+    return new_tp
+end
+
 """
     AbstractAutomaton
 
-Abstract type for a hybrid automaton.
+Abstract type for an automaton.
 """
 abstract type AbstractAutomaton end
+
+"""
+    AbstractTransition
+
+Abstract type for the transition of an automaton.
+"""
+abstract type AbstractTransition end
 
 """
     states(A::AbstractAutomaton)
@@ -57,7 +82,7 @@ Adds a transition between states `q` and `r` with symbol `σ` to the automaton `
 """
 function add_transition! end
 """
-    has_transition(A::AbstractAutomaton, t)
+    has_transition(A::AbstractAutomaton, t::AbstractTransition)
 
 Returns `true` if the automaton `A` has the transition `t`.
 """
@@ -76,13 +101,13 @@ Remove the state `q` to the automaton `A`.
 function rem_state! end
 
 """
-    source(A::AbstractAutomaton, t)
+    source(A::AbstractAutomaton, t::AbstractTransition)
 
 Returns the source of the transition `t`.
 """
 function source end
 """
-    event(A::AbstractAutomaton, t)
+    event(A::AbstractAutomaton, t::AbstractTransition)
 
 Returns the event/symbol of the transition `t` in the automaton `A`.
 It has the alias `symbol`.
@@ -90,7 +115,7 @@ It has the alias `symbol`.
 function event end
 const symbol = event
 """
-    target(A::AbstractAutomaton, t)
+    target(A::AbstractAutomaton, t::AbstractTransition)
 
 Returns the target of the transition `t`.
 """
@@ -122,7 +147,7 @@ end
 
 Transition of `OneStateAutomaton` with label `σ`.
 """
-struct OneStateTransition
+struct OneStateTransition <: AbstractTransition
     σ::Int
 end
 
@@ -137,6 +162,42 @@ target(::OneStateAutomaton, t::OneStateTransition) = 1
 in_transitions(A::OneStateAutomaton, s) = transitions(A)
 out_transitions(A::OneStateAutomaton, s) = transitions(A)
 
+mutable struct OneStateStateProperty{T} <: StateProperty{T}
+    automaton::OneStateAutomaton
+    value::Union{Nothing, T}
+end
+state_property_type(::Type{OneStateAutomaton}, T::Type) = OneStateStateProperty{T}
+function state_property(automaton::OneStateAutomaton, T::Type)
+    return OneStateStateProperty{T}(automaton, nothing)
+end
+function Base.getindex(p::OneStateStateProperty,
+                       s::Int)
+    @assert isone(s)
+    p.value
+end
+function Base.setindex!(p::OneStateStateProperty, value,
+                        s::Int)
+    @assert isone(s)
+    p.value = value
+end
+
+struct OneStateTransitionProperty{T} <: TransitionProperty{T}
+    automaton::OneStateAutomaton
+    value::Vector{T}
+end
+transition_property_type(::Type{OneStateAutomaton}, T::Type) = OneStateTransitionProperty{T}
+function transition_property(automaton::OneStateAutomaton, T::Type)
+    return OneStateTransitionProperty(automaton, Vector{T}(undef, automaton.nt))
+end
+function Base.getindex(p::OneStateTransitionProperty,
+                       t::OneStateTransition)
+    p.value[t.σ]
+end
+function Base.setindex!(p::OneStateTransitionProperty, value,
+                        t::OneStateTransition)
+    p.value[t.σ] = value
+end
+
 using LightGraphs
 
 """
@@ -150,9 +211,11 @@ A hybrid automaton that uses the `LightGraphs` backend. See the constructor
 - `G` -- graph of type `GT` whose vertices determine the states
 - `Σ` -- dictionary mapping the edges to their labels
 """
-struct LightAutomaton{GT, ET} <: AbstractAutomaton
+mutable struct LightAutomaton{GT, ET} <: AbstractAutomaton
     G::GT
-    Σ::Dict{ET, Int}
+    Σ::Dict{ET, Dict{Int, Int}}
+    next_id::Int
+    nt::Int
 end
 
 """
@@ -185,32 +248,86 @@ Edge 2 => 1
 """
 function LightAutomaton(n::Int)
     G = DiGraph(n)
-    Σ = Dict{edgetype(G), Int}()
-    LightAutomaton(G, Σ)
+    Σ = Dict{edgetype(G), Dict{Int, Int}}()
+    LightAutomaton(G, Σ, 0, 0)
+end
+
+struct LightTransition{ET} <: AbstractTransition
+    edge::ET
+    id::Int
+end
+
+"""
+    struct TransitionIterator{GT, ET, VT}
+        automaton::LightAutomaton{GT, ET}
+        edge_iterator::VT
+    end
+
+Iterate over the transitions of `automaton` by iterating over the edges `edge`
+of `edge_iterator` and the ids `id` of `automaton.Σ[edge]` for each one. Its
+elements are `LightTransition(edge, id)`.
+"""
+struct TransitionIterator{GT, ET, VT}
+    automaton::LightAutomaton{GT, ET}
+    edge_iterator::VT
+end
+eltype(::TransitionIterator{ET}) where {ET} = LightTransition{ET}
+function new_id_iterate(tit::TransitionIterator, edge, edge_state, ids, ::Nothing)
+    return new_edge_iterate(tit, iterate(tit.edge_iterator, edge_state))
+end
+function new_id_iterate(tit::TransitionIterator, edge, edge_state, ids, id_item_state)
+    idσ, id_state = id_item_state
+    return LightTransition(edge, idσ[1]), (edge, edge_state, ids, id_state)
+end
+new_edge_iterate(::TransitionIterator, ::Nothing) = nothing
+function new_edge_iterate(tit::TransitionIterator, edge_item_state)
+    edge, edge_state = edge_item_state
+    ids = tit.automaton.Σ[edge]
+    return new_id_iterate(tit, edge, edge_state, ids, iterate(ids))
+end
+function Base.iterate(tit::TransitionIterator)
+    return new_edge_iterate(tit, iterate(tit.edge_iterator))
+end
+function Base.iterate(tit::TransitionIterator, edge_id_state)
+    edge, edge_state, ids, id_state = edge_id_state
+    return new_id_iterate(tit, edge, edge_state, ids, iterate(ids, id_state))
 end
 
 states(A::LightAutomaton) = vertices(A.G)
 nstates(A::LightAutomaton) = nv(A.G)
 
-transitiontype(A::LightAutomaton) = edgetype(A.G)
-transitions(A::LightAutomaton) = edges(A.G)
-ntransitions(A::LightAutomaton) = ne(A.G)
+transitiontype(A::LightAutomaton) = LightTransition{edgetype(A.G)}
+transitions(A::LightAutomaton) = TransitionIterator(A, edges(A.G))
+ntransitions(A::LightAutomaton) = A.nt
 
 function add_transition!(A::LightAutomaton, q, r, σ)
-    t = Edge(q, r)
-    add_edge!(A.G, t)
-    A.Σ[t] = σ
-    return t
+    edge = Edge(q, r)
+    A.next_id += 1
+    A.nt += 1
+    id = A.next_id
+    ids = get(A.Σ, edge, nothing)
+    new_ids = ids === nothing
+    if new_ids
+        ids = Dict{Int, Int}()
+    end
+    ids[id] = σ
+    if new_ids
+        add_edge!(A.G, edge)
+        A.Σ[edge] = ids
+    end
+    return LightTransition(edge, id)
 end
-# FIXME this is nonsense for multiples edges with different labels
-function has_transition(A::LightAutomaton, t)
-    edge = Edge(source(A, t), target(A, t))
-    has_edge(A.G, edge)
+function has_transition(A::LightAutomaton, t::LightTransition)
+    has_edge(A.G, t.edge) && haskey(A.Σ[edge], t.id)
 end
-function rem_transition!(A::LightAutomaton, t)
-    edge = Edge(source(A, t), target(A, t))
-    rem_edge!(A.G, edge)
-    delete!(A.Σ, edge)
+function rem_transition!(A::LightAutomaton, t::LightTransition)
+    ids = A.Σ[t.edge]
+    delete!(ids, t.id)
+    A.nt -= 1
+    if isempty(ids)
+        rem_edge!(A.G, t.edge)
+        delete!(A.Σ, t.edge)
+    end
 end
 
 function rem_state!(A::LightAutomaton, st)
@@ -223,13 +340,51 @@ function rem_state!(A::LightAutomaton, st)
     rem_vertex!(A.G, st)
 end
 
-source(::LightAutomaton, t::Edge) = t.src
-event(A::LightAutomaton, t::Edge) = A.Σ[t]
-target(::LightAutomaton, t::Edge) = t.dst
+source(::LightAutomaton, t::LightTransition) = t.edge.src
+event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
+target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
 function in_transitions(A::LightAutomaton, s)
-    Edge.(inneighbors(A.G, s), s)
+    TransitionIterator(A, Edge.(inneighbors(A.G, s), s))
 end
 function out_transitions(A::LightAutomaton, s)
-    Edge.(s, outneighbors(A.G, s))
+    TransitionIterator(A, Edge.(s, outneighbors(A.G, s)))
+end
+
+struct LightStateProperty{GT, ET, T} <: StateProperty{T}
+    automaton::LightAutomaton{GT, ET}
+    value::Vector{T}
+end
+function state_property_type(::Type{LightAutomaton{GT, ET}}, T::Type) where {GT, ET}
+    return LightStateProperty{GT, ET, T}
+end
+function state_property(automaton::LightAutomaton, T::Type)
+    return LightStateProperty(automaton, Vector{T}(undef, nstates(automaton)))
+end
+function Base.getindex(p::LightStateProperty,
+                       s::Int)
+    p.value[s]
+end
+function Base.setindex!(p::LightStateProperty, value,
+                        s::Int)
+    p.value[s] = value
+end
+
+struct LightTransitionProperty{GT, ET, T} <: TransitionProperty{T}
+    automaton::LightAutomaton{GT, ET}
+    value::Vector{T}
+end
+function transition_property_type(::Type{LightAutomaton{GT, ET}}, T::Type) where {GT, ET}
+    return LightTransitionProperty{GT, ET, T}
+end
+function transition_property(automaton::LightAutomaton, T::Type)
+    return LightTransitionProperty(automaton, Vector{T}(undef, automaton.next_id))
+end
+function Base.getindex(p::LightTransitionProperty,
+                       t::LightTransition)
+    p.value[t.id]
+end
+function Base.setindex!(p::LightTransitionProperty, value,
+                        t::LightTransition)
+    p.value[t.id] = value
 end
