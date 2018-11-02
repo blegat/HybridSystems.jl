@@ -1,7 +1,6 @@
 module HybridSystems
 
 include("automata.jl")
-include("maps.jl")
 include("switchings.jl")
 
 using MathematicalSystems
