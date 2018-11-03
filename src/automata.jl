@@ -252,16 +252,16 @@ following:
 julia> a = LightAutomaton(2);
 
 julia> add_transition!(a, 1, 1, 1) # Add a self-loop of label 1 for state 1
-Edge 1 => 1
+HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 1, 1)
 
 julia> add_transition!(a, 2, 2, 1) # Add a self-loop of label 1 for state 2
-Edge 2 => 2
+HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 2, 2)
 
 julia> add_transition!(a, 1, 2, 2) # Add a transition from state 1 to state 2 with label 2
-Edge 1 => 2
+HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 2, 3)
 
 julia> add_transition!(a, 2, 1, 3) # Add a transition from state 2 to state 1 with label 3
-Edge 2 => 1
+HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 1, 4)
 ```
 """
 function LightAutomaton(n::Int)
