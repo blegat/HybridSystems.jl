@@ -29,12 +29,16 @@ Abstract type for an automaton.
 """
 abstract type AbstractAutomaton end
 
+Base.broadcastable(A::AbstractAutomaton) = Ref(A)
+
 """
     AbstractTransition
 
 Abstract type for the transition of an automaton.
 """
 abstract type AbstractTransition end
+
+Base.broadcastable(t::AbstractTransition) = Ref(t)
 
 """
     states(A::AbstractAutomaton)
@@ -81,10 +85,16 @@ function ntransitions end
 Adds a transition between states `q` and `r` with symbol `σ` to the automaton `A`.
 """
 function add_transition! end
-"""
-    has_transition(A::AbstractAutomaton, t::AbstractTransition)
 
-Returns `true` if the automaton `A` has the transition `t`.
+"""
+    has_transition(A::AbstractAutomaton, t::AbstractTransition)::Bool
+
+Returns a `Bool` indicating whether the automaton `A` has the transition `t`.
+
+    has_transition(A::AbstractAutomaton, q, r)::Bool
+
+Returns a `Bool` indicating whether the automaton `A` has a transition from
+state `q` to state `r`.
 """
 function has_transition end
 """
@@ -161,6 +171,14 @@ event(::OneStateAutomaton, t::OneStateTransition) = t.σ
 target(::OneStateAutomaton, t::OneStateTransition) = 1
 in_transitions(A::OneStateAutomaton, s) = transitions(A)
 out_transitions(A::OneStateAutomaton, s) = transitions(A)
+function has_transition(A::OneStateAutomaton, q, r)
+    @assert q == 1
+    @assert r == 1
+    return !iszero(A.nt)
+end
+function has_transition(A::OneStateAutomaton, t::OneStateTransition)
+    return 1 <= t.σ <= A.nt
+end
 
 mutable struct OneStateStateProperty{T} <: StateProperty{T}
     automaton::OneStateAutomaton
@@ -304,8 +322,14 @@ transitiontype(A::LightAutomaton) = LightTransition{edgetype(A.G)}
 transitions(A::LightAutomaton) = TransitionIterator(A, edges(A.G))
 ntransitions(A::LightAutomaton) = A.nt
 
+function edge_object(A::LightAutomaton, q, r)
+    @assert 1 <= q <= nstates(A)
+    @assert 1 <= r <= nstates(A)
+    return Edge(q, r)
+end
+
 function add_transition!(A::LightAutomaton, q, r, σ)
-    edge = Edge(q, r)
+    edge = edge_object(A, q, r)
     A.next_id += 1
     A.nt += 1
     id = A.next_id
@@ -321,8 +345,11 @@ function add_transition!(A::LightAutomaton, q, r, σ)
     end
     return LightTransition(edge, id)
 end
+function has_transition(A::LightAutomaton, q, r)
+    return has_edge(A.G, edge_object(A, q, r))
+end
 function has_transition(A::LightAutomaton, t::LightTransition)
-    has_edge(A.G, t.edge) && haskey(A.Σ[edge], t.id)
+    return has_edge(A.G, t.edge) && haskey(A.Σ[t.edge], t.id)
 end
 function rem_transition!(A::LightAutomaton, t::LightTransition)
     ids = A.Σ[t.edge]
@@ -349,10 +376,10 @@ event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
 function in_transitions(A::LightAutomaton, s)
-    TransitionIterator(A, Edge.(inneighbors(A.G, s), s))
+    TransitionIterator(A, edge_object.(A, inneighbors(A.G, s), s))
 end
 function out_transitions(A::LightAutomaton, s)
-    TransitionIterator(A, Edge.(s, outneighbors(A.G, s)))
+    TransitionIterator(A, edge_object.(A, s, outneighbors(A.G, s)))
 end
 
 struct LightStateProperty{GT, ET, T} <: StateProperty{T}
