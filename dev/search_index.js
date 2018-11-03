@@ -1,7 +1,7 @@
 var documenterSearchIndex = {"docs": [
 
 {
-    "location": "index.html#",
+    "location": "#",
     "page": "Home",
     "title": "Home",
     "category": "page",
@@ -9,7 +9,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#HybridSystems.jl-1",
+    "location": "#HybridSystems.jl-1",
     "page": "Home",
     "title": "HybridSystems.jl",
     "category": "section",
@@ -17,7 +17,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Library-Outline-1",
+    "location": "#Library-Outline-1",
     "page": "Home",
     "title": "Library Outline",
     "category": "section",
@@ -25,7 +25,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#",
+    "location": "lib/types/#",
     "page": "Types",
     "title": "Types",
     "category": "page",
@@ -33,7 +33,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#Types-1",
+    "location": "lib/types/#Types-1",
     "page": "Types",
     "title": "Types",
     "category": "section",
@@ -41,7 +41,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.AbstractHybridSystem",
+    "location": "lib/types/#HybridSystems.AbstractHybridSystem",
     "page": "Types",
     "title": "HybridSystems.AbstractHybridSystem",
     "category": "type",
@@ -49,7 +49,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.HybridSystem",
+    "location": "lib/types/#HybridSystems.HybridSystem",
     "page": "Types",
     "title": "HybridSystems.HybridSystem",
     "category": "type",
@@ -57,7 +57,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#Hybrid-systems-1",
+    "location": "lib/types/#Hybrid-systems-1",
     "page": "Types",
     "title": "Hybrid systems",
     "category": "section",
@@ -65,7 +65,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.AbstractAutomaton",
+    "location": "lib/types/#HybridSystems.AbstractAutomaton",
     "page": "Types",
     "title": "HybridSystems.AbstractAutomaton",
     "category": "type",
@@ -73,7 +73,15 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.OneStateAutomaton",
+    "location": "lib/types/#HybridSystems.AbstractTransition",
+    "page": "Types",
+    "title": "HybridSystems.AbstractTransition",
+    "category": "type",
+    "text": "AbstractTransition\n\nAbstract type for the transition of an automaton.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/types/#HybridSystems.OneStateAutomaton",
     "page": "Types",
     "title": "HybridSystems.OneStateAutomaton",
     "category": "type",
@@ -81,7 +89,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.OneStateTransition",
+    "location": "lib/types/#HybridSystems.OneStateTransition",
     "page": "Types",
     "title": "HybridSystems.OneStateTransition",
     "category": "type",
@@ -89,7 +97,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.LightAutomaton",
+    "location": "lib/types/#HybridSystems.LightAutomaton",
     "page": "Types",
     "title": "HybridSystems.LightAutomaton",
     "category": "type",
@@ -97,23 +105,31 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.LightAutomaton-Tuple{Int64}",
+    "location": "lib/types/#HybridSystems.LightAutomaton-Tuple{Int64}",
     "page": "Types",
     "title": "HybridSystems.LightAutomaton",
     "category": "method",
-    "text": "LightAutomaton(n::Int)\n\nCreates a LightAutomaton with n states 1, 2, ..., n. The automaton is initialized without any transitions, use add_transition! to add transitions.\n\nExamples\n\nTo create an automaton with 2 nodes 1, 2, self-loops of labels 1, a transition from 1 to 2 with label 2 and transition from 2 to 1 with label 3, do the following:\n\njulia> a = LightAutomaton(2);\n\njulia> add_transition!(a, 1, 1, 1) # Add a self-loop of label 1 for state 1\nEdge 1 => 1\n\njulia> add_transition!(a, 2, 2, 1) # Add a self-loop of label 1 for state 2\nEdge 2 => 2\n\njulia> add_transition!(a, 1, 2, 2) # Add a transition from state 1 to state 2 with label 2\nEdge 1 => 2\n\njulia> add_transition!(a, 2, 1, 3) # Add a transition from state 2 to state 1 with label 3\nEdge 2 => 1\n\n\n\n\n\n"
+    "text": "LightAutomaton(n::Int)\n\nCreates a LightAutomaton with n states 1, 2, ..., n. The automaton is initialized without any transitions, use add_transition! to add transitions.\n\nExamples\n\nTo create an automaton with 2 nodes 1, 2, self-loops of labels 1, a transition from 1 to 2 with label 2 and transition from 2 to 1 with label 3, do the following:\n\njulia> a = LightAutomaton(2);\n\njulia> add_transition!(a, 1, 1, 1) # Add a self-loop of label 1 for state 1\nHybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 1, 1)\n\njulia> add_transition!(a, 2, 2, 1) # Add a self-loop of label 1 for state 2\nHybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 2, 2)\n\njulia> add_transition!(a, 1, 2, 2) # Add a transition from state 1 to state 2 with label 2\nHybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 2, 3)\n\njulia> add_transition!(a, 2, 1, 3) # Add a transition from state 2 to state 1 with label 3\nHybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 1, 4)\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/types.html#Automata-1",
+    "location": "lib/types/#HybridSystems.LightTransitionIterator",
+    "page": "Types",
+    "title": "HybridSystems.LightTransitionIterator",
+    "category": "type",
+    "text": "struct LightTransitionIterator{GT, ET, VT}\n    automaton::LightAutomaton{GT, ET}\n    edge_iterator::VT\nend\n\nIterate over the transitions of automaton by iterating over the edges edge of edge_iterator and the ids id of automaton.Σ[edge] for each one. Its elements are LightTransition(edge, id).\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/types/#Automata-1",
     "page": "Types",
     "title": "Automata",
     "category": "section",
-    "text": "AbstractAutomaton\nOneStateAutomaton\nOneStateTransition\nLightAutomaton\nLightAutomaton(::Int)"
+    "text": "AbstractAutomaton\nHybridSystems.AbstractTransition\nOneStateAutomaton\nOneStateTransition\nLightAutomaton\nLightAutomaton(::Int)\nHybridSystems.LightTransitionIterator"
 },
 
 {
-    "location": "lib/types.html#HybridSystems.AbstractSwitching",
+    "location": "lib/types/#HybridSystems.AbstractSwitching",
     "page": "Types",
     "title": "HybridSystems.AbstractSwitching",
     "category": "type",
@@ -121,7 +137,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.AutonomousSwitching",
+    "location": "lib/types/#HybridSystems.AutonomousSwitching",
     "page": "Types",
     "title": "HybridSystems.AutonomousSwitching",
     "category": "type",
@@ -129,7 +145,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#HybridSystems.ControlledSwitching",
+    "location": "lib/types/#HybridSystems.ControlledSwitching",
     "page": "Types",
     "title": "HybridSystems.ControlledSwitching",
     "category": "type",
@@ -137,7 +153,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/types.html#Switchings-1",
+    "location": "lib/types/#Switchings-1",
     "page": "Types",
     "title": "Switchings",
     "category": "section",
@@ -145,7 +161,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#",
+    "location": "lib/methods/#",
     "page": "Methods",
     "title": "Methods",
     "category": "page",
@@ -153,7 +169,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Methods-1",
+    "location": "lib/methods/#Methods-1",
     "page": "Methods",
     "title": "Methods",
     "category": "section",
@@ -161,7 +177,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.discreteswitchedsystem",
+    "location": "lib/methods/#HybridSystems.discreteswitchedsystem",
     "page": "Methods",
     "title": "HybridSystems.discreteswitchedsystem",
     "category": "function",
@@ -169,7 +185,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Switched-Systems-1",
+    "location": "lib/methods/#Switched-Systems-1",
     "page": "Methods",
     "title": "Switched Systems",
     "category": "section",
@@ -177,7 +193,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#MathematicalSystems.statedim",
+    "location": "lib/methods/#MathematicalSystems.statedim",
     "page": "Methods",
     "title": "MathematicalSystems.statedim",
     "category": "function",
@@ -185,7 +201,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#MathematicalSystems.stateset",
+    "location": "lib/methods/#MathematicalSystems.stateset",
     "page": "Methods",
     "title": "MathematicalSystems.stateset",
     "category": "function",
@@ -193,7 +209,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#MathematicalSystems.inputdim",
+    "location": "lib/methods/#MathematicalSystems.inputdim",
     "page": "Methods",
     "title": "MathematicalSystems.inputdim",
     "category": "function",
@@ -201,7 +217,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#MathematicalSystems.inputset",
+    "location": "lib/methods/#MathematicalSystems.inputset",
     "page": "Methods",
     "title": "MathematicalSystems.inputset",
     "category": "function",
@@ -209,7 +225,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Continuous-sub-systems-1",
+    "location": "lib/methods/#Continuous-sub-systems-1",
     "page": "Methods",
     "title": "Continuous sub-systems",
     "category": "section",
@@ -217,7 +233,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Hybrid-automata-1",
+    "location": "lib/methods/#Hybrid-automata-1",
     "page": "Methods",
     "title": "Hybrid automata",
     "category": "section",
@@ -225,7 +241,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.states",
+    "location": "lib/methods/#HybridSystems.states",
     "page": "Methods",
     "title": "HybridSystems.states",
     "category": "function",
@@ -233,7 +249,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.nstates",
+    "location": "lib/methods/#HybridSystems.nstates",
     "page": "Methods",
     "title": "HybridSystems.nstates",
     "category": "function",
@@ -241,7 +257,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.rem_state!",
+    "location": "lib/methods/#HybridSystems.rem_state!",
     "page": "Methods",
     "title": "HybridSystems.rem_state!",
     "category": "function",
@@ -249,7 +265,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Modes-1",
+    "location": "lib/methods/#Modes-1",
     "page": "Methods",
     "title": "Modes",
     "category": "section",
@@ -257,7 +273,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.transitiontype",
+    "location": "lib/methods/#HybridSystems.transitiontype",
     "page": "Methods",
     "title": "HybridSystems.transitiontype",
     "category": "function",
@@ -265,7 +281,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.transitions",
+    "location": "lib/methods/#HybridSystems.transitions",
     "page": "Methods",
     "title": "HybridSystems.transitions",
     "category": "function",
@@ -273,7 +289,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.ntransitions",
+    "location": "lib/methods/#HybridSystems.ntransitions",
     "page": "Methods",
     "title": "HybridSystems.ntransitions",
     "category": "function",
@@ -281,7 +297,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.add_transition!",
+    "location": "lib/methods/#HybridSystems.add_transition!",
     "page": "Methods",
     "title": "HybridSystems.add_transition!",
     "category": "function",
@@ -289,15 +305,15 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.has_transition",
+    "location": "lib/methods/#HybridSystems.has_transition",
     "page": "Methods",
     "title": "HybridSystems.has_transition",
     "category": "function",
-    "text": "has_transition(A::AbstractAutomaton, t::AbstractTransition)\n\nReturns true if the automaton A has the transition t.\n\n\n\n\n\n"
+    "text": "has_transition(A::AbstractAutomaton, t::AbstractTransition)::Bool\n\nReturns a Bool indicating whether the automaton A has the transition t.\n\nhas_transition(A::AbstractAutomaton, q, r)::Bool\n\nReturns a Bool indicating whether the automaton A has a transition from state q to state r.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.rem_transition!",
+    "location": "lib/methods/#HybridSystems.rem_transition!",
     "page": "Methods",
     "title": "HybridSystems.rem_transition!",
     "category": "function",
@@ -305,7 +321,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.source",
+    "location": "lib/methods/#HybridSystems.source",
     "page": "Methods",
     "title": "HybridSystems.source",
     "category": "function",
@@ -313,7 +329,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.event",
+    "location": "lib/methods/#HybridSystems.event",
     "page": "Methods",
     "title": "HybridSystems.event",
     "category": "function",
@@ -321,7 +337,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.target",
+    "location": "lib/methods/#HybridSystems.target",
     "page": "Methods",
     "title": "HybridSystems.target",
     "category": "function",
@@ -329,7 +345,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.in_transitions",
+    "location": "lib/methods/#HybridSystems.in_transitions",
     "page": "Methods",
     "title": "HybridSystems.in_transitions",
     "category": "function",
@@ -337,7 +353,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#HybridSystems.out_transitions",
+    "location": "lib/methods/#HybridSystems.out_transitions",
     "page": "Methods",
     "title": "HybridSystems.out_transitions",
     "category": "function",
@@ -345,7 +361,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods.html#Transitions-1",
+    "location": "lib/methods/#Transitions-1",
     "page": "Methods",
     "title": "Transitions",
     "category": "section",
