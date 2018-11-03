@@ -1,9 +1,10 @@
 using Documenter, HybridSystems
 
 makedocs(
-    doctest = true,
+    strict = true,
+    # See https://github.com/JuliaDocs/Documenter.jl/issues/868
+    html_prettyurls = get(ENV, "CI", nothing) == "true",
     modules = [HybridSystems],
-    format = :html,
     sitename = "HybridSystems.jl",
     pages = [
         "Home" => "index.md",
@@ -15,9 +16,4 @@ makedocs(
 
 deploydocs(
     repo = "github.com/blegat/HybridSystems.jl.git",
-    target = "build",
-    osname = "linux",
-    julia  = "1.0",
-    deps = nothing,
-    make = nothing
 )
