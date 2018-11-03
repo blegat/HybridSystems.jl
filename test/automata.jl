@@ -36,13 +36,22 @@ end
 @testset "Automaton" begin
     @testset "OneStateAutomaton" begin
         automaton = OneStateAutomaton(5)
-        t1 = HybridSystems.OneStateTransition(1)
-        t2 = HybridSystems.OneStateTransition(2)
-        t3 = HybridSystems.OneStateTransition(3)
-        t4 = HybridSystems.OneStateTransition(4)
-        t5 = HybridSystems.OneStateTransition(5)
+        t = map(σ -> begin
+            t = HybridSystems.OneStateTransition(σ)
+            @test source(automaton, t) == 1
+            @test target(automaton, t) == 1
+            @test event(automaton, t) == σ
+            return t
+        end, 1:5)
         test_state_prop(automaton)
-        test_trans_prop(automaton, t1, t2, t3, t4, t5)
+        test_trans_prop(automaton, t...)
+        @test collect(states(automaton)) == [1]
+        @test nstates(automaton) == 1
+        @test collect(transitions(automaton)) == t
+        @test collect(in_transitions(automaton, 1)) == t
+        @test collect(out_transitions(automaton, 1)) == t
+        @test has_transition(automaton, 1, 1) == true
+        @test length(transitions(automaton)) == 5
         @test ntransitions(automaton) == 5
         @test !has_transition(automaton, HybridSystems.OneStateTransition(0))
         @test  has_transition(automaton, HybridSystems.OneStateTransition(1))
