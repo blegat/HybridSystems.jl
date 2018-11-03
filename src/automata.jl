@@ -276,7 +276,7 @@ struct LightTransition{ET} <: AbstractTransition
 end
 
 """
-    struct TransitionIterator{GT, ET, VT}
+    struct LightTransitionIterator{GT, ET, VT}
         automaton::LightAutomaton{GT, ET}
         edge_iterator::VT
     end
@@ -285,32 +285,32 @@ Iterate over the transitions of `automaton` by iterating over the edges `edge`
 of `edge_iterator` and the ids `id` of `automaton.Σ[edge]` for each one. Its
 elements are `LightTransition(edge, id)`.
 """
-struct TransitionIterator{GT, ET, VT}
+struct LightTransitionIterator{GT, ET, VT}
     automaton::LightAutomaton{GT, ET}
     edge_iterator::VT
 end
-Base.eltype(::TransitionIterator{GT, ET}) where {GT, ET} = LightTransition{ET}
-function Base.length(tit::TransitionIterator)
+Base.eltype(::LightTransitionIterator{GT, ET}) where {GT, ET} = LightTransition{ET}
+function Base.length(tit::LightTransitionIterator)
     return sum(edge -> length(tit.automaton.Σ[edge]),
                tit.edge_iterator)
 end
-function new_id_iterate(tit::TransitionIterator, edge, edge_state, ids, ::Nothing)
+function new_id_iterate(tit::LightTransitionIterator, edge, edge_state, ids, ::Nothing)
     return new_edge_iterate(tit, iterate(tit.edge_iterator, edge_state))
 end
-function new_id_iterate(tit::TransitionIterator, edge, edge_state, ids, id_item_state)
+function new_id_iterate(tit::LightTransitionIterator, edge, edge_state, ids, id_item_state)
     idσ, id_state = id_item_state
     return LightTransition(edge, idσ[1]), (edge, edge_state, ids, id_state)
 end
-new_edge_iterate(::TransitionIterator, ::Nothing) = nothing
-function new_edge_iterate(tit::TransitionIterator, edge_item_state)
+new_edge_iterate(::LightTransitionIterator, ::Nothing) = nothing
+function new_edge_iterate(tit::LightTransitionIterator, edge_item_state)
     edge, edge_state = edge_item_state
     ids = tit.automaton.Σ[edge]
     return new_id_iterate(tit, edge, edge_state, ids, iterate(ids))
 end
-function Base.iterate(tit::TransitionIterator)
+function Base.iterate(tit::LightTransitionIterator)
     return new_edge_iterate(tit, iterate(tit.edge_iterator))
 end
-function Base.iterate(tit::TransitionIterator, edge_id_state)
+function Base.iterate(tit::LightTransitionIterator, edge_id_state)
     edge, edge_state, ids, id_state = edge_id_state
     return new_id_iterate(tit, edge, edge_state, ids, iterate(ids, id_state))
 end
@@ -319,7 +319,7 @@ states(A::LightAutomaton) = vertices(A.G)
 nstates(A::LightAutomaton) = nv(A.G)
 
 transitiontype(A::LightAutomaton) = LightTransition{edgetype(A.G)}
-transitions(A::LightAutomaton) = TransitionIterator(A, edges(A.G))
+transitions(A::LightAutomaton) = LightTransitionIterator(A, edges(A.G))
 ntransitions(A::LightAutomaton) = A.nt
 
 function edge_object(A::LightAutomaton, q, r)
@@ -376,10 +376,10 @@ event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
 function in_transitions(A::LightAutomaton, s)
-    TransitionIterator(A, edge_object.(A, inneighbors(A.G, s), s))
+    LightTransitionIterator(A, edge_object.(A, inneighbors(A.G, s), s))
 end
 function out_transitions(A::LightAutomaton, s)
-    TransitionIterator(A, edge_object.(A, s, outneighbors(A.G, s)))
+    LightTransitionIterator(A, edge_object.(A, s, outneighbors(A.G, s)))
 end
 
 struct LightStateProperty{GT, ET, T} <: StateProperty{T}

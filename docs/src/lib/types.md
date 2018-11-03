@@ -25,10 +25,12 @@ HybridSystem
 
 ```@docs
 AbstractAutomaton
+HybridSystems.AbstractTransition
 OneStateAutomaton
 OneStateTransition
 LightAutomaton
 LightAutomaton(::Int)
+HybridSystems.LightTransitionIterator
 ```
 
 ## Switchings
