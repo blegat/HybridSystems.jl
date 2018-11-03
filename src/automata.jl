@@ -271,7 +271,11 @@ struct TransitionIterator{GT, ET, VT}
     automaton::LightAutomaton{GT, ET}
     edge_iterator::VT
 end
-eltype(::TransitionIterator{ET}) where {ET} = LightTransition{ET}
+Base.eltype(::TransitionIterator{GT, ET}) where {GT, ET} = LightTransition{ET}
+function Base.length(tit::TransitionIterator)
+    return sum(edge -> length(tit.automaton.Σ[edge]),
+               tit.edge_iterator)
+end
 function new_id_iterate(tit::TransitionIterator, edge, edge_state, ids, ::Nothing)
     return new_edge_iterate(tit, iterate(tit.edge_iterator, edge_state))
 end

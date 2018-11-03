@@ -53,11 +53,18 @@ end
         t3 = add_transition!(automaton, 2, 1, 2)
         t4 = add_transition!(automaton, 2, 2, 1)
         t5 = add_transition!(automaton, 1, 2, 2)
+        @test length(out_transitions(automaton, 1)) == 3
+        @test length(out_transitions(automaton, 2)) == 2
+        @test length(in_transitions(automaton, 1)) == 2
+        @test length(in_transitions(automaton, 2)) == 3
+        @test eltype(transitions(automaton)) == typeof(first(transitions(automaton)))
         test_state_prop(automaton)
         test_trans_prop(automaton, t1, t2, t3, t4, t5)
         @test ntransitions(automaton) == 5
+        @test length(transitions(automaton)) == 5
         rem_transition!(automaton, t5)
         @test ntransitions(automaton) == 4
+        @test length(transitions(automaton)) == 4
         rem_transition!(automaton, t1)
         @test ntransitions(automaton) == 3
         rem_transition!(automaton, t2)
