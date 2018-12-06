@@ -157,6 +157,10 @@ function rem_state!(A::LightAutomaton, st)
     LightGraphs.rem_vertex!(A.G, st)
 end
 
+function add_state!(A::LightAutomaton)
+    LightGraphs.add_vertex!(A.G)
+end
+
 source(::LightAutomaton, t::LightTransition) = t.edge.src
 event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
