@@ -154,11 +154,11 @@ function rem_state!(A::LightAutomaton, st)
     for t in collect(out_transitions(A, st))
         rem_transition!(A, t)
     end
-    LightGraphs.rem_vertex!(A.G, st)
+    return LightGraphs.rem_vertex!(A.G, st)
 end
 
 function add_state!(A::LightAutomaton)
-    LightGraphs.add_vertex!(A.G)
+    return LightGraphs.add_vertex!(A.G)
 end
 
 source(::LightAutomaton, t::LightTransition) = t.edge.src
