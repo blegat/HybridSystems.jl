@@ -115,7 +115,11 @@ end
         @test ntransitions(automaton) == 4
         t5 = add_transition!(automaton, 1, 2, 2)
         @test ntransitions(automaton) == 5
-        t5 = rem_state!(automaton, 2)
+        @test rem_state!(automaton, 2)
         @test ntransitions(automaton) == 1
+        @test nstates(automaton) == 1
+        @test add_state!(automaton)
+        @test nstates(automaton) == 2
+
     end
 end
