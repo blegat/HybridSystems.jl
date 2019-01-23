@@ -1,7 +1,12 @@
-# Section 6.1 of
+# Section 6.1 of [RMT13] and running example of [LTJ18]
+#
 # [RMT13] Rungger, Matthias and Mazo Jr, Manuel and Tabuada, Paulo
 # Specification-guided controller synthesis for linear systems and safe linear-time temporal logic
 # Proceedings of the 16th international conference on Hybrid systems: computation and control, 2013
+#
+# [LTJ18] Legat, Benoît and Tabuada, Paulo and Jungers, Raphaël M.
+# Computing controlled invariant sets for hybrid systems with applications to model-predictive control
+# https://www.sciencedirect.com/science/article/pii/S2405896318311480
 
 using Compat, Compat.LinearAlgebra
 using FillArrays
@@ -11,7 +16,9 @@ using HybridSystems
 using Polyhedra
 
 """
-    cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4, D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100, H = 0.8, T = 2, h = H / T, sym = false)
+    cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U = 4,
+                           D = 0.5, ks = 4500, kd = 4600, m = 1000, m0 = 100,
+                           H = 0.8, T = 2, h = H / T, sym = false)
 
 Hybrid System representing the speed of a truck and its `M` trailers.
 The mass of the truck is `m0` and the mass of each trailer is `m`.
