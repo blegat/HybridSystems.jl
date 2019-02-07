@@ -205,7 +205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "MathematicalSystems.stateset",
     "category": "function",
-    "text": "stateset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed states of the system at mode u.\n\n\n\n\n\nstateset(s::AbstractSystem, t)\n\nReturns the guard for the transition t.\n\n\n\n\n\n"
+    "text": "stateset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed states of the system at mode u.\n\n\n\n\n\n"
 },
 
 {
@@ -366,6 +366,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Transitions",
     "category": "section",
     "text": "transitiontype\ntransitions\nntransitions\nadd_transition!\nhas_transition\nrem_transition!\nsource\nevent\ntarget\nin_transitions\nout_transitions"
+},
+
+{
+    "location": "lib/methods/#HybridSystems.guard",
+    "page": "Methods",
+    "title": "HybridSystems.guard",
+    "category": "function",
+    "text": "guard(hs::HybridSystem, t)\n\nReturns the guard for the transition t.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/methods/#Guards-1",
+    "page": "Methods",
+    "title": "Guards",
+    "category": "section",
+    "text": "guard"
 },
 
 ]}
