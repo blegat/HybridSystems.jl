@@ -55,3 +55,9 @@ target
 in_transitions
 out_transitions
 ```
+
+### Guards
+
+```@docs
+guard
+```
