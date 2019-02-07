@@ -105,6 +105,13 @@ guard(hs::HybridSystem, t) = stateset(hs.resetmaps[symbol(hs, t)])
 MathematicalSystems.stateset(hs::HybridSystem, t) = guard(hs, t)
 
 """
+    assignment(hs::HybridSystem, t)
+
+Returns the assignment for the transition `t`.
+"""
+assignment(hs::HybridSystem, t) = hs.resetmaps[symbol(hs, t)]
+
+"""
     inputdim(s::AbstractSystem, u::Int)
 
 Returns the dimension of the input space of the system at mode `u`.
