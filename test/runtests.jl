@@ -73,6 +73,7 @@ end
             for t in transitions(s)
                 @test stateset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
                 @test inputset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
+                @test target_mode(s, t) == s.modes[target(s, t)]
             end
         end
     end
