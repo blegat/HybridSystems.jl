@@ -94,22 +94,22 @@ Returns the set of allowed states of the system at mode `u`.
 MathematicalSystems.stateset(hs::HybridSystem, u::Int) = stateset(hs.modes[u])
 
 """
-    guard(hs::HybridSystem, t)
-
-Returns the guard for the transition `t`.
-"""
-guard(hs::HybridSystem, t) = stateset(hs.resetmaps[symbol(hs, t)])
-
-# for completeness, extend the stateset function from MathematicalSystems
-# because guards are given as the state constraints of the reset map
-MathematicalSystems.stateset(hs::HybridSystem, t) = guard(hs, t)
-
-"""
     assignment(hs::HybridSystem, t)
 
 Returns the assignment for the transition `t`.
 """
 assignment(hs::HybridSystem, t) = hs.resetmaps[symbol(hs, t)]
+
+"""
+    guard(hs::HybridSystem, t)
+
+Returns the guard for the transition `t`.
+"""
+guard(hs::HybridSystem, t) = stateset(assignment(hs, t))
+
+# for completeness, extend the stateset function from MathematicalSystems
+# because guards are given as the state constraints of the reset map
+MathematicalSystems.stateset(hs::HybridSystem, t) = guard(hs, t)
 
 """
     inputdim(s::AbstractSystem, u::Int)
