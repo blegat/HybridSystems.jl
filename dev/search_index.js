@@ -377,11 +377,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/methods/#Guards-1",
+    "location": "lib/methods/#HybridSystems.assignment",
     "page": "Methods",
-    "title": "Guards",
+    "title": "HybridSystems.assignment",
+    "category": "function",
+    "text": "assignment(hs::HybridSystem, t)\n\nReturns the assignment for the transition t.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/methods/#Guards-and-Assignments-1",
+    "page": "Methods",
+    "title": "Guards and Assignments",
     "category": "section",
-    "text": "guard"
+    "text": "guard\nassignment"
 },
 
 ]}
