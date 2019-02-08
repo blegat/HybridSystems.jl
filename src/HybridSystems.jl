@@ -78,7 +78,7 @@ for f in [:state_property_type, :transition_property_type]
 end
 
 # System
-export statedim, stateset, inputdim, inputset
+export statedim, stateset, inputdim, inputset, guard, assignment, target_mode
 """
     statedim(hs::HybridSystem, u::Int)
 
@@ -92,6 +92,13 @@ MathematicalSystems.statedim(hs::HybridSystem, u::Int) = statedim(hs.modes[u])
 Returns the set of allowed states of the system at mode `u`.
 """
 MathematicalSystems.stateset(hs::HybridSystem, u::Int) = stateset(hs.modes[u])
+
+"""
+    target_mode(hs::HybridSystem, t)
+
+Returns the target mode for the transition `t`.
+"""
+target_mode(hs::HybridSystem, t) = hs.modes[target(hs, t)]
 
 """
     assignment(hs::HybridSystem, t)
@@ -128,7 +135,7 @@ MathematicalSystems.inputset(hs::HybridSystem, u::Int) = inputset(hs.modes[u])
 """
     inputset(s::AbstractSystem, t)
 
-Returns the st of allowed inputs for the transition `t`.
+Returns the set of allowed inputs for the transition `t`.
 """
 MathematicalSystems.inputset(hs::HybridSystem, t) = inputset(hs.resetmaps[symbol(hs, t)])
 
