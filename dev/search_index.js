@@ -221,7 +221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "MathematicalSystems.inputset",
     "category": "function",
-    "text": "inputset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed inputs of the system at mode u.\n\n\n\n\n\ninputset(s::AbstractSystem, t)\n\nReturns the st of allowed inputs for the transition t.\n\n\n\n\n\n"
+    "text": "inputset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed inputs of the system at mode u.\n\n\n\n\n\ninputset(s::AbstractSystem, t)\n\nReturns the set of allowed inputs for the transition t.\n\n\n\n\n\n"
 },
 
 {
@@ -265,11 +265,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/methods/#HybridSystems.target_mode",
+    "page": "Methods",
+    "title": "HybridSystems.target_mode",
+    "category": "function",
+    "text": "target_mode(hs::HybridSystem, t)\n\nReturns the target mode for the transition t.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/methods/#Modes-1",
     "page": "Methods",
     "title": "Modes",
     "category": "section",
-    "text": "states\nnstates\nrem_state!"
+    "text": "states\nnstates\nrem_state!\ntarget_mode"
 },
 
 {
