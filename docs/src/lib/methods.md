@@ -56,8 +56,9 @@ in_transitions
 out_transitions
 ```
 
-### Guards
+### Guards and Assignments
 
 ```@docs
 guard
+assignment
 ```
