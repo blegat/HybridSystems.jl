@@ -60,6 +60,7 @@ out_transitions
 ### Guards and Assignments
 
 ```@docs
+resetmap
 guard
 assignment
 ```

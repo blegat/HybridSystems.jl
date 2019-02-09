@@ -23,9 +23,8 @@ corresponding labels.
 The mode dynamic and domain are stored in a continuous dynamical system of type
 `S` in the vector `modes`. They are indexed by the discrete states of the
 automaton.
-The reset maps and guards are given as discrete dynamical system or discrete map
-of type `R` in the vector `resetmaps`. They are indexed by the labels of the
-corresponding transition.
+The reset maps and guards are given as a map of type `R` in the vector `resetmaps`.
+They are indexed by the labels of the corresponding transition.
 The switching of type `W` is given in the `switchings` vector,
 indexed by the label of the transition.
 Additional data can be stored in the `ext` field.
@@ -43,11 +42,11 @@ Additional data can be stored in the `ext` field.
                   transition, see [`AbstractSwitching`](@ref).
 - `ext`        -- dictionary that can be used by extensions.
 
-## Examples
+### Examples
 
 See [the Thermostat example](https://github.com/blegat/HybridSystems.jl/blob/master/examples/Thermostat.ipynb).
 """
-struct HybridSystem{A, S, R, W} <: AbstractHybridSystem
+struct HybridSystem{A, S<:AbstractSystem, R<:AbstractMap, W} <: AbstractHybridSystem
     automaton::A
     modes::AbstractVector{S}
     resetmaps::AbstractVector{R}
@@ -78,7 +77,7 @@ for f in [:state_property_type, :transition_property_type]
 end
 
 # System
-export statedim, stateset, inputdim, inputset, guard, assignment, target_mode
+export statedim, stateset, inputdim, inputset, guard, assignment, target_mode, resetmap
 """
     statedim(hs::HybridSystem, u::Int)
 
@@ -101,18 +100,25 @@ Returns the target mode for the transition `t`.
 target_mode(hs::HybridSystem, t) = hs.modes[target(hs, t)]
 
 """
+    resetmap(hs::HybridSystem, t)
+
+Returns the reset map for the transition `t`.
+"""
+resetmap(hs::HybridSystem, t) = hs.resetmaps[symbol(hs, t)]
+
+"""
     assignment(hs::HybridSystem, t)
 
 Returns the assignment for the transition `t`.
 """
-assignment(hs::HybridSystem, t) = hs.resetmaps[symbol(hs, t)]
+assignment(hs::HybridSystem, t) = args -> apply(resetmap(hs, t), args)
 
 """
     guard(hs::HybridSystem, t)
 
 Returns the guard for the transition `t`.
 """
-guard(hs::HybridSystem, t) = stateset(assignment(hs, t))
+guard(hs::HybridSystem, t) = stateset(resetmap(hs, t))
 
 # for completeness, extend the stateset function from MathematicalSystems
 # because guards are given as the state constraints of the reset map
