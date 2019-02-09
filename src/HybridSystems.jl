@@ -17,17 +17,7 @@ abstract type AbstractHybridSystem <: MathematicalSystems.AbstractSystem end
 """
     HybridSystem{A, S, R, W} <: AbstractHybridSystem
 
-A hybrid system modelled as a hybrid automaton. The automaton `automaton` of
-type `A` models the different discrete states and the allowed transitions with
-corresponding labels.
-The mode dynamic and domain are stored in a continuous dynamical system of type
-`S` in the vector `modes`. They are indexed by the discrete states of the
-automaton.
-The reset maps and guards are given as a map of type `R` in the vector `resetmaps`.
-They are indexed by the labels of the corresponding transition.
-The switching of type `W` is given in the `switchings` vector,
-indexed by the label of the transition.
-Additional data can be stored in the `ext` field.
+A hybrid system modelled as a hybrid automaton.
 
 ### Fields
 
@@ -42,11 +32,29 @@ Additional data can be stored in the `ext` field.
                   transition, see [`AbstractSwitching`](@ref).
 - `ext`        -- dictionary that can be used by extensions.
 
+### Notes
+
+The automaton `automaton` of type `A` models the different discrete states and
+the allowed transitions with corresponding labels.
+
+The mode dynamic and domain are stored in a continuous dynamical system of type
+`S` in the vector `modes`. They are indexed by the discrete states of the
+automaton.
+
+The reset maps and guards are given as a map or a discrete dynamical system of
+type `R` in the vector `resetmaps`. They are indexed by the labels of the
+corresponding transition.
+
+The switching of type `W` is given in the `switchings` vector, indexed by the
+label of the transition.
+
+Additional data can be stored in the `ext` field.
+
 ### Examples
 
 See [the Thermostat example](https://github.com/blegat/HybridSystems.jl/blob/master/examples/Thermostat.ipynb).
 """
-struct HybridSystem{A, S<:AbstractSystem, R<:AbstractMap, W} <: AbstractHybridSystem
+struct HybridSystem{A, S, R, W} <: AbstractHybridSystem
     automaton::A
     modes::AbstractVector{S}
     resetmaps::AbstractVector{R}
@@ -111,7 +119,7 @@ resetmap(hs::HybridSystem, t) = hs.resetmaps[symbol(hs, t)]
 
 Returns the assignment for the transition `t`.
 """
-assignment(hs::HybridSystem, t) = args -> apply(resetmap(hs, t), args)
+assignment(hs::HybridSystem{A,S,R,W}, t) where {A, S<:AbstractSystem, R<:AbstractMap, W} = args -> apply(resetmap(hs, t), args)
 
 """
     guard(hs::HybridSystem, t)
