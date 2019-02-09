@@ -119,7 +119,7 @@ resetmap(hs::HybridSystem, t) = hs.resetmaps[symbol(hs, t)]
 
 Returns the assignment for the transition `t`.
 """
-assignment(hs::HybridSystem{A,S,R,W}, t) where {A, S<:AbstractSystem, R<:AbstractMap, W} = args -> apply(resetmap(hs, t), args)
+assignment(hs::HybridSystem{A,S,R,W}, t) where {A, S<:AbstractSystem, R<:AbstractMap, W} = (args...) -> apply(resetmap(hs, t), args...)
 
 """
     guard(hs::HybridSystem, t)
