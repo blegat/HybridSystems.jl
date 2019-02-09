@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Types",
     "title": "HybridSystems.HybridSystem",
     "category": "type",
-    "text": "HybridSystem{A, S, R, W} <: AbstractHybridSystem\n\nA hybrid system modelled as a hybrid automaton. The automaton automaton of type A models the different discrete states and the allowed transitions with corresponding labels. The mode dynamic and domain are stored in a continuous dynamical system of type S in the vector modes. They are indexed by the discrete states of the automaton. The reset maps and guards are given as discrete dynamical system or discrete map of type R in the vector resetmaps. They are indexed by the labels of the corresponding transition. The switching of type W is given in the switchings vector, indexed by the label of the transition. Additional data can be stored in the ext field.\n\nFields\n\nautomaton  – hybrid automaton of type A.\nmodes      – vector of modes of type S indexed by the discrete states,                 both the domain and the dynamic are stored in this field.                 See stateset to access the domain.\nresetmaps  – vector of reset maps of type R indexed by the label of the                 transition, the guard is stored as constraint of the map in                 this field. See stateset to access the guard.\nswitchings – vector of switchings of type W indexed by the label of the                 transition, see AbstractSwitching.\next        – dictionary that can be used by extensions.\n\nExamples\n\nSee the Thermostat example.\n\n\n\n\n\n"
+    "text": "HybridSystem{A, S, R, W} <: AbstractHybridSystem\n\nA hybrid system modelled as a hybrid automaton.\n\nFields\n\nautomaton  – hybrid automaton of type A.\nmodes      – vector of modes of type S indexed by the discrete states,                 both the domain and the dynamic are stored in this field.                 See stateset to access the domain.\nresetmaps  – vector of reset maps of type R indexed by the label of the                 transition, the guard is stored as constraint of the map in                 this field. See stateset to access the guard.\nswitchings – vector of switchings of type W indexed by the label of the                 transition, see AbstractSwitching.\next        – dictionary that can be used by extensions.\n\nNotes\n\nThe automaton automaton of type A models the different discrete states and the allowed transitions with corresponding labels.\n\nThe mode dynamic and domain are stored in a continuous dynamical system of type S in the vector modes. They are indexed by the discrete states of the automaton.\n\nThe reset maps and guards are given as a map or a discrete dynamical system of type R in the vector resetmaps. They are indexed by the labels of the corresponding transition.\n\nThe switching of type W is given in the switchings vector, indexed by the label of the transition.\n\nAdditional data can be stored in the ext field.\n\nExamples\n\nSee the Thermostat example.\n\n\n\n\n\n"
 },
 
 {
@@ -377,6 +377,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/methods/#HybridSystems.resetmap",
+    "page": "Methods",
+    "title": "HybridSystems.resetmap",
+    "category": "function",
+    "text": "resetmap(hs::HybridSystem, t)\n\nReturns the reset map for the transition t.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/methods/#HybridSystems.guard",
     "page": "Methods",
     "title": "HybridSystems.guard",
@@ -397,7 +405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "Guards and Assignments",
     "category": "section",
-    "text": "guard\nassignment"
+    "text": "resetmap\nguard\nassignment"
 },
 
 ]}
