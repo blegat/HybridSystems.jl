@@ -68,9 +68,17 @@ end
         t1 = add_transition!(automaton, 1, 2, 1)
         @test has_transition(automaton, 1, 2)
         @test !has_transition(automaton, 1, 1)
+        @test length(out_transitions(automaton, 1)) == 1
+        @test length(out_transitions(automaton, 2)) == 0
+        @test length(in_transitions(automaton, 1)) == 0
+        @test length(in_transitions(automaton, 2)) == 1
         t2 = add_transition!(automaton, 1, 1, 1)
         t3 = add_transition!(automaton, 2, 1, 2)
         @test !has_transition(automaton, 2, 2)
+        @test length(out_transitions(automaton, 1)) == 2
+        @test length(out_transitions(automaton, 2)) == 1
+        @test length(in_transitions(automaton, 1)) == 2
+        @test length(in_transitions(automaton, 2)) == 1
         t4 = add_transition!(automaton, 2, 2, 1)
         t5 = add_transition!(automaton, 1, 2, 2)
         @test has_transition(automaton, t1)
