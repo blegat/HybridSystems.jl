@@ -74,8 +74,9 @@ struct LightTransitionIterator{GT, ET, VT}
 end
 Base.eltype(::LightTransitionIterator{GT, ET}) where {GT, ET} = LightTransition{ET}
 function Base.length(tit::LightTransitionIterator)
-    return sum(edge -> length(tit.automaton.Σ[edge]),
-               tit.edge_iterator)
+    eit = tit.edge_iterator
+    # empty iterator must be handled separately (see #29)
+    return isempty(eit) ? 0 : sum(edge -> length(tit.automaton.Σ[edge]), eit)
 end
 function new_id_iterate(tit::LightTransitionIterator, edge, edge_state, ids, ::Nothing)
     return new_edge_iterate(tit, iterate(tit.edge_iterator, edge_state))
@@ -107,10 +108,14 @@ function transitions(A::LightAutomaton)
 end
 ntransitions(A::LightAutomaton) = A.nt
 
+function edge_object_no_assertion(A::LightAutomaton, q, r)
+    return LightGraphs.Edge(q, r)
+end
+
 function edge_object(A::LightAutomaton, q, r)
     @assert 1 <= q <= nstates(A)
     @assert 1 <= r <= nstates(A)
-    return LightGraphs.Edge(q, r)
+    return edge_object_no_assertion(A, q, r)
 end
 
 function add_transition!(A::LightAutomaton, q, r, σ)
@@ -166,13 +171,16 @@ event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
 function in_transitions(A::LightAutomaton, s)
-    edges = MappedArrays.mappedarray(src -> edge_object(A, src, s),
-                                     LightGraphs.inneighbors(A.G, s))
+    it = LightGraphs.inneighbors(A.G, s)
+    # MappedArrays.mappedarray over empty array returns 'zero' (see #29)
+    edge_function = isempty(it) ? edge_object_no_assertion : edge_object
+    edges = MappedArrays.mappedarray(src -> edge_function(A, src, s), it)
     LightTransitionIterator(A, edges)
 end
 function out_transitions(A::LightAutomaton, s)
-    edges = MappedArrays.mappedarray(dst -> edge_object(A, s, dst),
-                                     LightGraphs.outneighbors(A.G, s))
+    it = LightGraphs.outneighbors(A.G, s)
+    edge_function = isempty(it) ? edge_object_no_assertion : edge_object
+    edges = MappedArrays.mappedarray(dst -> edge_function(A, s, dst), it)
     LightTransitionIterator(A, edges)
 end
 
