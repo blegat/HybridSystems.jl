@@ -108,14 +108,10 @@ function transitions(A::LightAutomaton)
 end
 ntransitions(A::LightAutomaton) = A.nt
 
-function edge_object_no_assertion(A::LightAutomaton, q, r)
-    return LightGraphs.Edge(q, r)
-end
-
 function edge_object(A::LightAutomaton, q, r)
     @assert 1 <= q <= nstates(A)
     @assert 1 <= r <= nstates(A)
-    return edge_object_no_assertion(A, q, r)
+    return LightGraphs.Edge(q, r)
 end
 
 function add_transition!(A::LightAutomaton, q, r, σ)
@@ -170,17 +166,16 @@ source(::LightAutomaton, t::LightTransition) = t.edge.src
 event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
-function in_transitions(A::LightAutomaton, s)
-    it = LightGraphs.inneighbors(A.G, s)
-    # MappedArrays.mappedarray over empty array returns 'zero' (see #29)
-    edge_function = isempty(it) ? edge_object_no_assertion : edge_object
-    edges = MappedArrays.mappedarray(src -> edge_function(A, src, s), it)
+function in_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
+    edges = MappedArrays.mappedarray(ET,
+                                     src -> edge_object(A, src, s),
+                                     LightGraphs.inneighbors(A.G, s))
     LightTransitionIterator(A, edges)
 end
-function out_transitions(A::LightAutomaton, s)
-    it = LightGraphs.outneighbors(A.G, s)
-    edge_function = isempty(it) ? edge_object_no_assertion : edge_object
-    edges = MappedArrays.mappedarray(dst -> edge_function(A, s, dst), it)
+function out_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
+    edges = MappedArrays.mappedarray(ET,
+                                     dst -> edge_object(A, s, dst),
+                                     LightGraphs.outneighbors(A.G, s))
     LightTransitionIterator(A, edges)
 end
 
