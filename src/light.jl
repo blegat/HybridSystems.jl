@@ -1,6 +1,8 @@
 import MappedArrays
 import LightGraphs
 
+using MappedArrays: ReadonlyMappedArray
+
 """
     LightAutomaton{GT, ET} <: AbstractAutomaton
 
@@ -167,15 +169,15 @@ event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
 function in_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
-    edges = MappedArrays.mappedarray(ET,
-                                     src -> edge_object(A, src, s),
-                                     LightGraphs.inneighbors(A.G, s))
+    f(src) = edge_object(A, src, s)
+    inneigh = LightGraphs.inneighbors(A.G, s)
+    edges = ReadonlyMappedArray{ET, 1, typeof(inneigh), typeof(f)}(f, inneigh)
     LightTransitionIterator(A, edges)
 end
 function out_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
-    edges = MappedArrays.mappedarray(ET,
-                                     dst -> edge_object(A, s, dst),
-                                     LightGraphs.outneighbors(A.G, s))
+    f(dst) = edge_object(A, s, dst)
+    outneigh = LightGraphs.outneighbors(A.G, s)
+    edges = ReadonlyMappedArray{ET, 1, typeof(outneigh), typeof(f)}(f, outneigh)
     LightTransitionIterator(A, edges)
 end
 
