@@ -1,6 +1,8 @@
 import MappedArrays
 import LightGraphs
 
+using MappedArrays: ReadonlyMappedArray
+
 """
     LightAutomaton{GT, ET} <: AbstractAutomaton
 
@@ -74,8 +76,9 @@ struct LightTransitionIterator{GT, ET, VT}
 end
 Base.eltype(::LightTransitionIterator{GT, ET}) where {GT, ET} = LightTransition{ET}
 function Base.length(tit::LightTransitionIterator)
-    return sum(edge -> length(tit.automaton.Σ[edge]),
-               tit.edge_iterator)
+    eit = tit.edge_iterator
+    # empty iterator must be handled separately (see #29)
+    return isempty(eit) ? 0 : sum(edge -> length(tit.automaton.Σ[edge]), eit)
 end
 function new_id_iterate(tit::LightTransitionIterator, edge, edge_state, ids, ::Nothing)
     return new_edge_iterate(tit, iterate(tit.edge_iterator, edge_state))
@@ -165,14 +168,16 @@ source(::LightAutomaton, t::LightTransition) = t.edge.src
 event(A::LightAutomaton, t::LightTransition) = A.Σ[t.edge][t.id]
 target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
-function in_transitions(A::LightAutomaton, s)
-    edges = MappedArrays.mappedarray(src -> edge_object(A, src, s),
-                                     LightGraphs.inneighbors(A.G, s))
+function in_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
+    f(src) = edge_object(A, src, s)
+    inneigh = LightGraphs.inneighbors(A.G, s)
+    edges = ReadonlyMappedArray{ET, 1, typeof(inneigh), typeof(f)}(f, inneigh)
     LightTransitionIterator(A, edges)
 end
-function out_transitions(A::LightAutomaton, s)
-    edges = MappedArrays.mappedarray(dst -> edge_object(A, s, dst),
-                                     LightGraphs.outneighbors(A.G, s))
+function out_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
+    f(dst) = edge_object(A, s, dst)
+    outneigh = LightGraphs.outneighbors(A.G, s)
+    edges = ReadonlyMappedArray{ET, 1, typeof(outneigh), typeof(f)}(f, outneigh)
     LightTransitionIterator(A, edges)
 end
 
