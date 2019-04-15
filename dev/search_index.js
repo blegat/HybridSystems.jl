@@ -325,7 +325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "HybridSystems.rem_transition!",
     "category": "function",
-    "text": "rem_transition!(A::AbstractAutomaton, q, r, σ)\n\nRemove the transition between states q and r with symbol σ to the automaton A.\n\n\n\n\n\n"
+    "text": "rem_transition!(A::AbstractAutomaton, t::AbstractTransition)\n\nRemove the transition t from the automaton A.\n\n\n\n\n\n"
 },
 
 {
