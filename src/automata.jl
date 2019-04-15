@@ -97,12 +97,14 @@ Returns a `Bool` indicating whether the automaton `A` has a transition from
 state `q` to state `r`.
 """
 function has_transition end
-"""
-    rem_transition!(A::AbstractAutomaton, q, r, σ)
 
-Remove the transition between states `q` and `r` with symbol `σ` to the automaton `A`.
+"""
+    rem_transition!(A::AbstractAutomaton, t::AbstractTransition)
+
+Remove the transition `t` from the automaton `A`.
 """
 function rem_transition! end
+
 """
     rem_state!(A::AbstractAutomaton, q)
 
@@ -116,6 +118,7 @@ function rem_state! end
 Returns the source of the transition `t`.
 """
 function source end
+
 """
     event(A::AbstractAutomaton, t::AbstractTransition)
 
@@ -124,18 +127,21 @@ It has the alias `symbol`.
 """
 function event end
 const symbol = event
+
 """
     target(A::AbstractAutomaton, t::AbstractTransition)
 
 Returns the target of the transition `t`.
 """
 function target end
+
 """
     in_transitions(A::AbstractAutomaton, s)
 
 Returns an iterator over the transitions with target `s`.
 """
 function in_transitions end
+
 """
     out_transitions(A::AbstractAutomaton, s)
 
