@@ -160,5 +160,6 @@ end
 
 # Particular cases
 include("switchedsystems.jl")
+include("paths.jl")
 
 end # module

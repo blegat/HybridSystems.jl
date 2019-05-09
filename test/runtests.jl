@@ -23,6 +23,16 @@ include("automata.jl")
         @test length(transitions(s)) == 2
         @test in_transitions(s, 1) == HybridSystems.OneStateTransition.([1, 2])
         @test out_transitions(s, 1) == HybridSystems.OneStateTransition.([1, 2])
+        @test source.(s, switchings(s, 2, 1, true)) == ones(4)
+        @test target.(s, switchings(s, 2, 1, true)) == ones(4)
+        @test source.(s, switchings(s, 2, 1, false)) == ones(4)
+        @test target.(s, switchings(s, 2, 1, false)) == ones(4)
+        sw1 = first(switchings(s, 2, 1, true))
+        sw2 = first(switchings(s, 2, 1, false))
+        append!(sw1, sw2)
+        @test sw1.seq == HybridSystems.OneStateTransition.(ones(Int, 4))
+        prepend!(sw1, sw2)
+        @test sw1.seq == HybridSystems.OneStateTransition.(ones(Int, 6))
     end
 
     @testset "State Dependent Switched System" begin
