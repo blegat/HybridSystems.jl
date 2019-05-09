@@ -64,3 +64,9 @@ resetmap
 guard
 assignment
 ```
+
+### Utilities
+
+```@docs
+switchings
+```

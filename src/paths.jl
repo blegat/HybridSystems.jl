@@ -74,8 +74,12 @@ struct SwitchingIterator{S<:HybridSystem}
 end
 Base.IteratorSize(::SwitchingIterator) = Base.SizeUnknown()
 
-# Iterates over all the `forward` switching of length `k` starting at `v0`
-function switchings(s::HybridSystem, k::Int, v0::Int, forward=true)
+"""
+    switchings(s::HybridSystem, k::Int, v0::Int, forward::Bool=true)
+
+Iterates over all the `forward` switching of length `k` starting at mode `v0`.
+"""
+function switchings(s::HybridSystem, k::Int, v0::Int, forward::Bool=true)
     SwitchingIterator(s, k, v0, forward)
 end
 
