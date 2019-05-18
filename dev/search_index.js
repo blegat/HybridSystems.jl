@@ -408,4 +408,20 @@ var documenterSearchIndex = {"docs": [
     "text": "resetmap\nguard\nassignment"
 },
 
+{
+    "location": "lib/methods/#HybridSystems.switchings",
+    "page": "Methods",
+    "title": "HybridSystems.switchings",
+    "category": "function",
+    "text": "switchings(s::HybridSystem, k::Int, v0::Int, forward::Bool=true)\n\nIterates over all the forward switching of length k starting at mode v0.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/methods/#Utilities-1",
+    "page": "Methods",
+    "title": "Utilities",
+    "category": "section",
+    "text": "switchings"
+},
+
 ]}
