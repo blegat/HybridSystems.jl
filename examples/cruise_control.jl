@@ -8,7 +8,7 @@
 # Computing controlled invariant sets for hybrid systems with applications to model-predictive control
 # https://www.sciencedirect.com/science/article/pii/S2405896318311480
 
-using Compat, Compat.LinearAlgebra
+using LinearAlgebra
 using FillArrays
 import LightGraphs
 using MathematicalSystems

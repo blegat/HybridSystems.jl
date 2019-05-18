@@ -22,8 +22,11 @@ function DiscreteSwitchingSequence(s::HybridSystem, A::AbstractMatrix, seq::Vect
     DiscreteSwitchingSequence(s, A, seq, length(seq))
 end
 switchingsequence(s::HybridSystem, A::AbstractMatrix, seq::Vector) = DiscreteSwitchingSequence(s, A, seq)
+using LinearAlgebra
 function switchingsequence(s::HybridSystem, len::Int=0, v::Int=1)
-    DiscreteSwitchingSequence(s, _eyes(s, v, true), Vector{transitiontype(s)}(undef, len), 0)
+    n = statedim(s, v)
+    A = Matrix(1.0LinearAlgebra.I, n, n)
+    DiscreteSwitchingSequence(s, A, Vector{transitiontype(s)}(undef, len), 0)
 end
 
 function Base.prepend!(s::DiscreteSwitchingSequence, other::DiscreteSwitchingSequence)

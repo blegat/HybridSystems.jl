@@ -23,16 +23,35 @@ include("automata.jl")
         @test length(transitions(s)) == 2
         @test in_transitions(s, 1) == HybridSystems.OneStateTransition.([1, 2])
         @test out_transitions(s, 1) == HybridSystems.OneStateTransition.([1, 2])
-        @test source.(s, switchings(s, 2, 1, true)) == ones(4)
-        @test target.(s, switchings(s, 2, 1, true)) == ones(4)
-        @test source.(s, switchings(s, 2, 1, false)) == ones(4)
-        @test target.(s, switchings(s, 2, 1, false)) == ones(4)
-        sw1 = first(switchings(s, 2, 1, true))
-        sw2 = first(switchings(s, 2, 1, false))
-        append!(sw1, sw2)
-        @test sw1.seq == HybridSystems.OneStateTransition.(ones(Int, 4))
-        prepend!(sw1, sw2)
-        @test sw1.seq == HybridSystems.OneStateTransition.(ones(Int, 6))
+        @testset "Switchings" begin
+            @test length(collect(switchings(s, 2, 1, true))) == 4
+            @test source.(s, switchings(s, 2, 1, true)) == ones(4)
+            @test target.(s, switchings(s, 2, 1, true)) == ones(4)
+            @test source.(s, switchings(s, 2, 1, false)) == ones(4)
+            @test target.(s, switchings(s, 2, 1, false)) == ones(4)
+            sw1 = first(switchings(s, 2, 1, true))
+            sw2 = first(switchings(s, 2, 1, false))
+            append!(sw1, sw2)
+            @test sw1.seq == HybridSystems.OneStateTransition.(ones(Int, 4))
+            prepend!(sw1, sw2)
+            @test sw1.seq == HybridSystems.OneStateTransition.(ones(Int, 6))
+
+            sw = HybridSystems.switchingsequence(s, 3)
+            @test sw.len == 0
+            prepend!(sw, sw2)
+            @test sw.len == 2
+            prepend!(sw, sw2)
+            @test sw.len == 4
+            @test sw.seq == HybridSystems.OneStateTransition.(ones(Int, 4))
+
+            sw = HybridSystems.switchingsequence(s, 3)
+            @test sw.len == 0
+            append!(sw, sw2)
+            @test sw.len == 2
+            append!(sw, sw2)
+            @test sw.len == 4
+            @test sw.seq == HybridSystems.OneStateTransition.(ones(Int, 4))
+        end
     end
 
     @testset "State Dependent Switched System" begin
