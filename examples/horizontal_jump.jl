@@ -1,4 +1,4 @@
-using Compat, Compat.LinearAlgebra
+using LinearAlgebra
 using FillArrays
 using MathematicalSystems
 using HybridSystems
