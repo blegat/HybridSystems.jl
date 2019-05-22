@@ -103,7 +103,7 @@ MathematicalSystems.stateset(hs::HybridSystem, u::Int) = stateset(hs.modes[u])
 """
     mode(hs::HybridSystem, u::Int)
 
-Returns the mode dynamical system at discrete state `u`.
+Returns the mode of the dynamical system at discrete state `u`.
 """
 mode(hs::HybridSystem, u::Int) = hs.modes[u]
 
