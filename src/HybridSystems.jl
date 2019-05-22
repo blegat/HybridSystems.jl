@@ -15,7 +15,7 @@ Abstract supertype for a hybrid system.
 abstract type AbstractHybridSystem <: MathematicalSystems.AbstractSystem end
 
 """
-    HybridSystem{A, S, R, W} <: AbstractHybridSystem
+    HybridSystem{A, S, R, W, SV<:AbstractVector{S}, RV<:AbstractVector{R}, RW<:AbstractVector{W}} <: AbstractHybridSystem
 
 A hybrid system modelled as a hybrid automaton.
 
@@ -54,11 +54,11 @@ Additional data can be stored in the `ext` field.
 
 See [the Thermostat example](https://github.com/blegat/HybridSystems.jl/blob/master/examples/Thermostat.ipynb).
 """
-struct HybridSystem{A, S, R, W} <: AbstractHybridSystem
+struct HybridSystem{A, S, R, W, SV<:AbstractVector{S}, RV<:AbstractVector{R}, RW<:AbstractVector{W}} <: AbstractHybridSystem
     automaton::A
-    modes::AbstractVector{S}
-    resetmaps::AbstractVector{R}
-    switchings::AbstractVector{W}
+    modes::SV
+    resetmaps::RV
+    switchings::RW
     # Can be used by extensions
     ext::Dict{Symbol, Any}
 end
