@@ -1,9 +1,9 @@
 # HybridSystems
 
-| **Documentation** | **Build Status** |
-|:-----------------:|:----------------:|
-| [![][docs-stable-img]][docs-stable-url] | [![Build Status][build-img]][build-url]       |
-| [![][docs-latest-img]][docs-latest-url] | [![Codecov branch][codecov-img]][codecov-url] |
+| **Documentation** | **Build Status** | **References to cite** |
+|:-----------------:|:----------------:|:----------------------:|
+| [![][docs-stable-img]][docs-stable-url] | [![Build Status][build-img]][build-url]       | [![DOI][zenodo-img]][zenodo-url] |
+| [![][docs-latest-img]][docs-latest-url] | [![Codecov branch][codecov-img]][codecov-url] |                                  |
 
 This packages defines an interface for defining and working with [Hybrid Systems](https://en.wikipedia.org/wiki/Hybrid_system).
 It also includes an implementation of this interface.
@@ -37,3 +37,6 @@ The following package implements algorithms using this interface:
 
 [build-img]: https://travis-ci.org/blegat/HybridSystems.jl.svg?branch=master
 [build-url]: https://travis-ci.org/blegat/HybridSystems.jl
+
+[zenodo-url]: https://doi.org/10.5281/zenodo.1246104
+[zenodo-img]: https://zenodo.org/badge/DOI/10.5281/zenodo.1246104.svg
