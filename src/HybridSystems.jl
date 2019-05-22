@@ -85,27 +85,34 @@ for f in [:state_property_type, :transition_property_type]
 end
 
 # System
-export statedim, stateset, inputdim, inputset, guard, assignment, target_mode, resetmap
+export statedim, stateset, inputdim, inputset, guard, assignment, mode, target_mode, resetmap
 """
     statedim(hs::HybridSystem, u::Int)
 
-Returns the dimension of the state space of the system at mode `u`.
+Returns the dimension of the state space of the system at discrete state `u`.
 """
 MathematicalSystems.statedim(hs::HybridSystem, u::Int) = statedim(hs.modes[u])
 
 """
     stateset(s::AbstractSystem, u::Int)
 
-Returns the set of allowed states of the system at mode `u`.
+Returns the set of allowed states of the system at discrete state `u`.
 """
 MathematicalSystems.stateset(hs::HybridSystem, u::Int) = stateset(hs.modes[u])
 
 """
-    target_mode(hs::HybridSystem, t)
+    mode(hs::HybridSystem, u::Int)
+
+Returns the mode dynamical system at discrete state `u`.
+"""
+mode(hs::HybridSystem, u::Int) = hs.modes[u]
+
+"""
+    target_mode(hs::AbstractHybridSystem, t)
 
 Returns the target mode for the transition `t`.
 """
-target_mode(hs::HybridSystem, t) = hs.modes[target(hs, t)]
+target_mode(hs::AbstractHybridSystem, t) = mode(hs, target(hs, t))
 
 """
     resetmap(hs::HybridSystem, t)
@@ -126,11 +133,11 @@ assignment(hs::HybridSystem{A,S,R,W}, t) where {A, S<:AbstractSystem, R<:Abstrac
 
 Returns the guard for the transition `t`.
 """
-guard(hs::HybridSystem, t) = stateset(resetmap(hs, t))
+guard(hs::AbstractHybridSystem, t) = stateset(resetmap(hs, t))
 
 # for completeness, extend the stateset function from MathematicalSystems
 # because guards are given as the state constraints of the reset map
-MathematicalSystems.stateset(hs::HybridSystem, t) = guard(hs, t)
+MathematicalSystems.stateset(hs::AbstractHybridSystem, t) = guard(hs, t)
 
 """
     inputdim(s::AbstractSystem, u::Int)

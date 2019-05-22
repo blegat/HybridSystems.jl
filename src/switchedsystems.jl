@@ -1,9 +1,9 @@
 using FillArrays
 export discreteswitchedsystem, DiscreteSwitchedLinearSystem, StateDepDiscreteSwitchedLinearSystem, ConstrainedDiscreteSwitchedLinearSystem
 
-const DiscreteSwitchedLinearSystem = HybridSystem{OneStateAutomaton, <:DiscreteIdentitySystem, <:LinearDiscreteSystem, AutonomousSwitching}
-const StateDepDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:ConstrainedDiscreteIdentitySystem, <:ConstrainedLinearDiscreteSystem, AutonomousSwitching}
-const ConstrainedDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:DiscreteIdentitySystem, <:LinearDiscreteSystem, AutonomousSwitching}
+const DiscreteSwitchedLinearSystem = HybridSystem{OneStateAutomaton, <:ContinuousIdentitySystem, <:LinearMap, AutonomousSwitching}
+const StateDepDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:ConstrainedContinuousIdentitySystem, <:ConstrainedLinearMap, AutonomousSwitching}
+const ConstrainedDiscreteSwitchedLinearSystem = HybridSystem{<:AbstractAutomaton, <:ContinuousIdentitySystem, <:LinearMap, AutonomousSwitching}
 
 """
     discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix})
@@ -41,16 +41,16 @@ where ``q_0, \\sigma_1, q_1, \\ldots, q_{k-1}, \\sigma_k, q_k`` is a valid seque
 function discreteswitchedsystem end
 function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::AbstractAutomaton=OneStateAutomaton(length(A)); kws...)
     n = nstates(G)
-    modes = DiscreteIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)))
-    rm = LinearDiscreteSystem.(A)
+    modes = ContinuousIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)))
+    rm = LinearMap.(A)
     sw = Fill(AutonomousSwitching(), n)
     HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
 end
 function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::AbstractAutomaton, S::AbstractVector; kws...)
     n = nstates(G)
-    modes = ConstrainedDiscreteIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)), S)
+    modes = ConstrainedContinuousIdentitySystem.(map(s -> _getstatedim(A, G, s), states(G)), S)
     guards = _guards(A, G, S)
-    rm = ConstrainedLinearDiscreteSystem.(A, guards)
+    rm = ConstrainedLinearMap.(A, guards)
     sw = Fill(AutonomousSwitching(), n)
     HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
 end
