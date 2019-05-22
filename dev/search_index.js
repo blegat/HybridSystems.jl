@@ -197,7 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "MathematicalSystems.statedim",
     "category": "function",
-    "text": "statedim(hs::HybridSystem, u::Int)\n\nReturns the dimension of the state space of the system at mode u.\n\n\n\n\n\n"
+    "text": "statedim(hs::HybridSystem, u::Int)\n\nReturns the dimension of the state space of the system at discrete state u.\n\n\n\n\n\n"
 },
 
 {
@@ -205,7 +205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "MathematicalSystems.stateset",
     "category": "function",
-    "text": "stateset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed states of the system at mode u.\n\n\n\n\n\n"
+    "text": "stateset(s::AbstractSystem, u::Int)\n\nReturns the set of allowed states of the system at discrete state u.\n\n\n\n\n\n"
 },
 
 {
@@ -265,11 +265,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/methods/#HybridSystems.mode",
+    "page": "Methods",
+    "title": "HybridSystems.mode",
+    "category": "function",
+    "text": "mode(hs::HybridSystem, u::Int)\n\nReturns the mode of the dynamical system at discrete state u.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/methods/#HybridSystems.target_mode",
     "page": "Methods",
     "title": "HybridSystems.target_mode",
     "category": "function",
-    "text": "target_mode(hs::HybridSystem, t)\n\nReturns the target mode for the transition t.\n\n\n\n\n\n"
+    "text": "target_mode(hs::AbstractHybridSystem, t)\n\nReturns the target mode for the transition t.\n\n\n\n\n\n"
 },
 
 {
@@ -277,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "Modes",
     "category": "section",
-    "text": "states\nnstates\nrem_state!\ntarget_mode"
+    "text": "states\nnstates\nrem_state!\nmode\ntarget_mode"
 },
 
 {
