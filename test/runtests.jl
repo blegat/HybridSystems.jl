@@ -94,6 +94,7 @@ end
             @test nstates(s) == 2
             @test states(s) == 1:2
             for u in states(s)
+                @test mode(s, u) === s.modes[u]
                 @test statedim(s, u) == 2
                 @test stateset(s, u) isa Polyhedra.DefaultPolyhedron{Float64}
             end
@@ -102,7 +103,7 @@ end
             for t in transitions(s)
                 @test stateset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
                 @test inputset(s, t) isa Polyhedra.DefaultPolyhedron{Float64}
-                @test target_mode(s, t) == s.modes[target(s, t)]
+                @test target_mode(s, t) === s.modes[target(s, t)]
             end
         end
     end
