@@ -38,6 +38,7 @@ inputset
 states
 nstates
 rem_state!
+mode
 target_mode
 ```
 
