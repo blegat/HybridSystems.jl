@@ -123,7 +123,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
 
     M = LightGraphs.ne(G.G)
 
-    S = ConstrainedDiscreteIdentitySystem.(d, polyhedron.(safe_sets, lib))
+    S = ConstrainedContinuousIdentitySystem.(d, polyhedron.(safe_sets, lib))
     Re = [s1, s2]
     Sw = Fill(sw, N)
 
