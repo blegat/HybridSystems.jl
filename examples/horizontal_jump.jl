@@ -17,7 +17,7 @@ function horizontal_jump_example(lib::Polyhedra.Library, shift::Bool=false)
     H2 = polyhedron(hrep([Matrix(1.0I, 2, 2); -Matrix(1.0I, 2, 2)], [4, 1 + shift, -2, 1]), lib)
     U = polyhedron(hrep(reshape([1., -1.], 2, 1), [2., -2.]), lib)
 
-    S = ConstrainedDiscreteIdentitySystem.(2, [H1, H2])
+    S = ConstrainedContinuousIdentitySystem.(2, [H1, H2])
 
     s1 = ConstrainedLinearControlDiscreteSystem([1. 0; 0 1], reshape([1.; 0], 2, 1), H1, U)
     s2 = ConstrainedLinearControlDiscreteSystem([1. 0; 0 1], reshape([1.; 0], 2, 1), H2, U)
