@@ -181,6 +181,11 @@ function out_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
     LightTransitionIterator(A, edges)
 end
 
+function get_transitions(A::LightAutomaton{GT, ET}, q, r) where {GT, ET}
+    e = edge_object(A, q, r)
+    LightTransitionIterator(A, [e])
+end
+
 struct LightStateProperty{GT, ET, T} <: StateProperty{T}
     automaton::LightAutomaton{GT, ET}
     value::Vector{T}

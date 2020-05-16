@@ -2,7 +2,7 @@ export LightAutomaton, AbstractAutomaton, OneStateAutomaton
 export states, modes, nstates, nmodes, transitions, ntransitions
 export source, event, symbol, target, transitiontype
 export add_transition!, has_transition, rem_transition!, rem_state!, add_state!
-export in_transitions, out_transitions
+export in_transitions, out_transitions, get_transitions
 
 abstract type StateProperty{T} end
 function typed_map(T::Type, f::Function, sp::StateProperty)
@@ -148,6 +148,13 @@ function in_transitions end
 Returns an iterator over the transitions with source `s`.
 """
 function out_transitions end
+
+"""
+    get_transitions(A::AbstractAutomaton, q, r)
+
+Returns an iterator over the transitions from state `q` to state `r`.
+"""
+function get_transitions end
 
 include("onestate.jl")
 include("light.jl")

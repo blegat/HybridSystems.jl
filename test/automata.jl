@@ -66,6 +66,8 @@ end
     @testset "LightAutomaton" begin
         automaton = LightAutomaton(2)
         t1 = add_transition!(automaton, 1, 2, 1)
+        gt12 = get_transitions(automaton, 1, 2)
+        @test length(gt12) == 1 && first(gt12) == t1
         @test has_transition(automaton, 1, 2)
         @test !has_transition(automaton, 1, 1)
         @test length(out_transitions(automaton, 1)) == 1
@@ -81,6 +83,8 @@ end
         @test length(in_transitions(automaton, 2)) == 1
         t4 = add_transition!(automaton, 2, 2, 1)
         t5 = add_transition!(automaton, 1, 2, 2)
+        gt12 = get_transitions(automaton, 1, 2)
+        @test length(gt12) == 2 && t1 ∈ gt12 && t5 ∈ gt12
         @test has_transition(automaton, t1)
         @test has_transition(automaton, t5)
         @test has_transition(automaton, t3)
