@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Methods",
     "title": "HybridSystems.transitions",
     "category": "function",
-    "text": "transitions(A::AbstractAutomaton)\n\nReturns an iterator over the transitions of the automaton A.\n\n\n\n\n\n"
+    "text": "transitions(A::AbstractAutomaton)\n\nReturns an iterator over the transitions of the automaton A.\n\ntransitions(A::AbstractAutomaton, q, r)\n\nReturns an iterator over the transitions from state q to state r of the automaton A.\n\n\n\n\n\n"
 },
 
 {
