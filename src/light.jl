@@ -116,6 +116,12 @@ function edge_object(A::LightAutomaton, q, r)
     return LightGraphs.Edge(q, r)
 end
 
+# return transitions with source `q` and target `r`
+function transitions(A::LightAutomaton{GT, ET}, q, r) where {GT, ET}
+    e = edge_object(A, q, r)
+    LightTransitionIterator(A, Fill(e, 1))
+end
+
 function add_transition!(A::LightAutomaton, q, r, σ)
     edge = edge_object(A, q, r)
     A.next_id += 1
