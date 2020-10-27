@@ -119,7 +119,7 @@ end
 # return transitions with source `q` and target `r`
 function transitions(A::LightAutomaton{GT, ET}, q, r) where {GT, ET}
     e = edge_object(A, q, r)
-    LightTransitionIterator(A, Fill(e, 1))
+    LightTransitionIterator(A, Fill(e, LightGraphs.has_edge(A.G, e) ? 1 : 0))
 end
 
 function add_transition!(A::LightAutomaton, q, r, σ)
