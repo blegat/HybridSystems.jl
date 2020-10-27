@@ -65,6 +65,8 @@ end
 
     @testset "LightAutomaton" begin
         automaton = LightAutomaton(2)
+        @test isempty(transitions(automaton, 1, 2))
+        @test length(transitions(automaton, 1, 2)) == 0
         t1 = add_transition!(automaton, 1, 2, 1)
         gt12 = transitions(automaton, 1, 2)
         @test length(gt12) == 1 && first(gt12) == t1
