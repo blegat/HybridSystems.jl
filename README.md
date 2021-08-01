@@ -15,12 +15,12 @@ The goal of this package is twofold
 
 The following package implements hybrid systems representations using this interface:
 
-* [SX](https://github.com/JuliaReach/SX.jl) : SpaceEx modeling language parser
+* [SpaceExParser](https://github.com/JuliaReach/SpaceExParser.jl) : [SpaceEx](http://spaceex.imag.fr/) modeling language parser
 
 The following package implements algorithms using this interface:
 
 * [SwitchOnSafety](https://github.com/blegat/SwitchOnSafety.jl) : Computing invariant sets of hybrid systems.
-* [Reachability](https://github.com/JuliaReach/Reachability.jl) : Computing reachable states of hybrid dynamical systems.
+* [ReachabilityAnalysis](https://github.com/JuliaReach/ReachabilityAnalysis.jl) : Computing reachable states of hybrid dynamical systems.
 
 ## Documentation
 
