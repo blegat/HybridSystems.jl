@@ -112,11 +112,11 @@ end
         for sym in (false, true)
             s = cruise_control_example(7, 1, sym=sym)
             @test nstates(s) == 7
-            @test transitiontype(s) == HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}
+            @test transitiontype(s) == HybridSystems.LightTransition{Graphs.SimpleGraphs.SimpleEdge{Int64}}
             t = first(transitions(s))
             @test target(s, t) == 1
             @test source(s, t) == 1
-            #@test sprint(show, s) == "Hybrid System with automaton HybridSystems.LightAutomaton{LightGraphs.SimpleGraphs.SimpleDiGraph{Int64},LightGraphs.SimpleGraphs.SimpleEdge{Int64}}({7, 21} directed simple Int64 graph, Dict(Edge 2 => 3=>2,Edge 6 => 5=>1,Edge 2 => 1=>1,Edge 4 => 4=>1,Edge 4 => 3=>2,Edge 3 => 6=>2,Edge 6 => 3=>2,Edge 4 => 6=>2,Edge 7 => 7=>1,Edge 6 => 6=>2,Edge 3 => 2=>1,Edge 5 => 4=>1,Edge 5 => 6=>2,Edge 7 => 6=>2,Edge 1 => 3=>2,Edge 5 => 3=>2,Edge 2 => 6=>2,Edge 1 => 1=>1,Edge 1 => 6=>2,Edge 3 => 3=>2,Edge 7 => 3=>2))"
+            #@test sprint(show, s) == "Hybrid System with automaton HybridSystems.LightAutomaton{Graphs.SimpleGraphs.SimpleDiGraph{Int64},Graphs.SimpleGraphs.SimpleEdge{Int64}}({7, 21} directed simple Int64 graph, Dict(Edge 2 => 3=>2,Edge 6 => 5=>1,Edge 2 => 1=>1,Edge 4 => 4=>1,Edge 4 => 3=>2,Edge 3 => 6=>2,Edge 6 => 3=>2,Edge 4 => 6=>2,Edge 7 => 7=>1,Edge 6 => 6=>2,Edge 3 => 2=>1,Edge 5 => 4=>1,Edge 5 => 6=>2,Edge 7 => 6=>2,Edge 1 => 3=>2,Edge 5 => 3=>2,Edge 2 => 6=>2,Edge 1 => 1=>1,Edge 1 => 6=>2,Edge 3 => 3=>2,Edge 7 => 3=>2))"
             @test iszero(inputdim(s, 1))
             @test iszero(inputdim(s, 2))
         end

@@ -1,12 +1,12 @@
 import MappedArrays
-import LightGraphs
+import Graphs
 
 using MappedArrays: ReadonlyMappedArray
 
 """
     LightAutomaton{GT, ET} <: AbstractAutomaton
 
-A hybrid automaton that uses the `LightGraphs` backend. See the constructor
+A hybrid automaton that uses the `Graphs` backend. See the constructor
 [`LightAutomaton(::Int)`](@ref).
 
 ###  Fields
@@ -37,21 +37,21 @@ following:
 julia> a = LightAutomaton(2);
 
 julia> add_transition!(a, 1, 1, 1) # Add a self-loop of label 1 for state 1
-HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 1, 1)
+HybridSystems.LightTransition{Graphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 1, 1)
 
 julia> add_transition!(a, 2, 2, 1) # Add a self-loop of label 1 for state 2
-HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 2, 2)
+HybridSystems.LightTransition{Graphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 2, 2)
 
 julia> add_transition!(a, 1, 2, 2) # Add a transition from state 1 to state 2 with label 2
-HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 2, 3)
+HybridSystems.LightTransition{Graphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 1 => 2, 3)
 
 julia> add_transition!(a, 2, 1, 3) # Add a transition from state 2 to state 1 with label 3
-HybridSystems.LightTransition{LightGraphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 1, 4)
+HybridSystems.LightTransition{Graphs.SimpleGraphs.SimpleEdge{Int64}}(Edge 2 => 1, 4)
 ```
 """
 function LightAutomaton(n::Int)
-    G = LightGraphs.DiGraph(n)
-    Σ = Dict{LightGraphs.edgetype(G), Dict{Int, Int}}()
+    G = Graphs.DiGraph(n)
+    Σ = Dict{Graphs.edgetype(G), Dict{Int, Int}}()
     LightAutomaton(G, Σ, 0, 0)
 end
 
@@ -101,25 +101,25 @@ function Base.iterate(tit::LightTransitionIterator, edge_id_state)
     return new_id_iterate(tit, edge, edge_state, ids, iterate(ids, id_state))
 end
 
-states(A::LightAutomaton) = LightGraphs.vertices(A.G)
-nstates(A::LightAutomaton) = LightGraphs.nv(A.G)
+states(A::LightAutomaton) = Graphs.vertices(A.G)
+nstates(A::LightAutomaton) = Graphs.nv(A.G)
 
-transitiontype(A::LightAutomaton) = LightTransition{LightGraphs.edgetype(A.G)}
+transitiontype(A::LightAutomaton) = LightTransition{Graphs.edgetype(A.G)}
 function transitions(A::LightAutomaton)
-    return LightTransitionIterator(A, LightGraphs.edges(A.G))
+    return LightTransitionIterator(A, Graphs.edges(A.G))
 end
 ntransitions(A::LightAutomaton) = A.nt
 
 function edge_object(A::LightAutomaton, q, r)
     @assert 1 <= q <= nstates(A)
     @assert 1 <= r <= nstates(A)
-    return LightGraphs.Edge(q, r)
+    return Graphs.Edge(q, r)
 end
 
 # return transitions with source `q` and target `r`
 function transitions(A::LightAutomaton{GT, ET}, q, r) where {GT, ET}
     e = edge_object(A, q, r)
-    LightTransitionIterator(A, Fill(e, LightGraphs.has_edge(A.G, e) ? 1 : 0))
+    LightTransitionIterator(A, Fill(e, Graphs.has_edge(A.G, e) ? 1 : 0))
 end
 
 function add_transition!(A::LightAutomaton, q, r, σ)
@@ -134,23 +134,23 @@ function add_transition!(A::LightAutomaton, q, r, σ)
     end
     ids[id] = σ
     if new_ids
-        LightGraphs.add_edge!(A.G, edge)
+        Graphs.add_edge!(A.G, edge)
         A.Σ[edge] = ids
     end
     return LightTransition(edge, id)
 end
 function has_transition(A::LightAutomaton, q, r)
-    return LightGraphs.has_edge(A.G, edge_object(A, q, r))
+    return Graphs.has_edge(A.G, edge_object(A, q, r))
 end
 function has_transition(A::LightAutomaton, t::LightTransition)
-    return LightGraphs.has_edge(A.G, t.edge) && haskey(A.Σ[t.edge], t.id)
+    return Graphs.has_edge(A.G, t.edge) && haskey(A.Σ[t.edge], t.id)
 end
 function rem_transition!(A::LightAutomaton, t::LightTransition)
     ids = A.Σ[t.edge]
     delete!(ids, t.id)
     A.nt -= 1
     if isempty(ids)
-        LightGraphs.rem_edge!(A.G, t.edge)
+        Graphs.rem_edge!(A.G, t.edge)
         delete!(A.Σ, t.edge)
     end
 end
@@ -163,11 +163,11 @@ function rem_state!(A::LightAutomaton, st)
     for t in collect(out_transitions(A, st))
         rem_transition!(A, t)
     end
-    return LightGraphs.rem_vertex!(A.G, st)
+    return Graphs.rem_vertex!(A.G, st)
 end
 
 function add_state!(A::LightAutomaton)
-    return LightGraphs.add_vertex!(A.G)
+    return Graphs.add_vertex!(A.G)
 end
 
 source(::LightAutomaton, t::LightTransition) = t.edge.src
@@ -176,13 +176,13 @@ target(::LightAutomaton, t::LightTransition) = t.edge.dst
 
 function in_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
     f(src) = edge_object(A, src, s)
-    inneigh = LightGraphs.inneighbors(A.G, s)
+    inneigh = Graphs.inneighbors(A.G, s)
     edges = ReadonlyMappedArray{ET, 1, typeof(inneigh), typeof(f)}(f, inneigh)
     LightTransitionIterator(A, edges)
 end
 function out_transitions(A::LightAutomaton{GT, ET}, s) where {GT, ET}
     f(dst) = edge_object(A, s, dst)
-    outneigh = LightGraphs.outneighbors(A.G, s)
+    outneigh = Graphs.outneighbors(A.G, s)
     edges = ReadonlyMappedArray{ET, 1, typeof(outneigh), typeof(f)}(f, outneigh)
     LightTransitionIterator(A, edges)
 end

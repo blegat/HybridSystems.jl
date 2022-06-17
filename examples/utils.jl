@@ -83,7 +83,7 @@ using MultivariatePolynomials
 using PolyJuMP
 using SumOfSquares
 using JuMP
-using LightGraphs
+using Graphs
 function ATrp(p, x, A)
     B = r(A)'
     y = x[1:size(B, 2)]

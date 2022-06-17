@@ -36,7 +36,7 @@ sw = AutonomousSwitching()
 using SemialgebraicSets
 fs = FullSpace()
 
-M = LightGraphs.ne(A.G)
+M = Graphs.ne(A.G)
 
 S = Fill(is, N)
 Gu = Fill(fs, M)
