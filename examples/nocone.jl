@@ -45,7 +45,7 @@
 #    @show as.A
 #    @show as.E
 #    g = s.a.G
-#    n = LightGraphs.nv(g)
+#    n = Graphs.nv(g)
 #    d = HybridSystems.dim(as)
 #    Q = [Semidefinite(d) for v in vertices(g)]
 #    if uc

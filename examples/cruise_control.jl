@@ -10,7 +10,7 @@
 
 using LinearAlgebra
 using FillArrays
-import LightGraphs
+import Graphs
 using MathematicalSystems
 using HybridSystems
 using Polyhedra
@@ -121,7 +121,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
 
     sw = AutonomousSwitching()
 
-    M = LightGraphs.ne(G.G)
+    M = Graphs.ne(G.G)
 
     S = ConstrainedContinuousIdentitySystem.(d, polyhedron.(safe_sets, lib))
     Re = [s1, s2]
