@@ -5,7 +5,7 @@ using Polyhedra
 using LinearAlgebra
 
 function square_example(lib::Polyhedra.Library)
-    automaton = LightAutomaton(1)
+    automaton = GraphAutomaton(1)
     add_transition!(automaton, 1, 1, 1)
 
     domain_hrep = HalfSpace([1, 0], 1) ∩ HalfSpace([-1, 0], 1) ∩ HalfSpace([0, 1], 1) ∩ HalfSpace([0, -1], 1)

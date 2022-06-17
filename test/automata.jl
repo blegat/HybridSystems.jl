@@ -6,7 +6,7 @@ function test_state_prop(automaton)
     @test typeof(prop) == HybridSystems.state_property_type(typeof(automaton), Float64)
     prop[1] = 0.5
     @test prop[1] == 0.5
-    iprop = HybridSystems.typed_map(Int, x -> convert(Int, ceil(x)), prop)
+    iprop = HybridSystems.typed_map(Int, x -> ceil(Int, x), prop)
     @test typeof(iprop) == HybridSystems.state_property_type(typeof(automaton), Int)
     @test iprop[1] == 1
 end
@@ -63,8 +63,8 @@ end
         @test !has_transition(automaton, HybridSystems.OneStateTransition(7))
     end
 
-    @testset "LightAutomaton" begin
-        automaton = LightAutomaton(2)
+    @testset "GraphAutomaton" begin
+        automaton = GraphAutomaton(2)
         @test isempty(transitions(automaton, 1, 2))
         @test length(transitions(automaton, 1, 2)) == 0
         t1 = add_transition!(automaton, 1, 2, 1)

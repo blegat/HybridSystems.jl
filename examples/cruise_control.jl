@@ -53,7 +53,7 @@ function cruise_control_example(N, M; vmin = 5., vmax = 35., v = (15.6, 24.5), U
         P1 = P0 ∩ Pvmin
     end
 
-    G = LightAutomaton(N)
+    G = GraphAutomaton(N)
     if N == 1
         add_transition!(G, 1, 1, 1)
         safe_sets = [P1 ∩ Pvimax[1]]

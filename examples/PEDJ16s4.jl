@@ -17,7 +17,7 @@ k1 = -0.49
 k2 = 0.27
 As = [A + B * [k1 k2], A + B * [0 k2], A + B * [k1 0], A]
 @assert eltype(As) <: SMatrix
-G = LightAutomaton(4)
+G = GraphAutomaton(4)
 add_transition!(G, 1, 2, 3)
 add_transition!(G, 2, 1, 2)
 add_transition!(G, 1, 3, 1)

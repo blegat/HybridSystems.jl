@@ -9,7 +9,7 @@
 #const MP = MultivariatePolynomials
 #
 ## Unbounded input
-#function liftinputalg(s::ConstrainedSystem{<:AbstractSystem, LightAutomaton{P, MP.FullSpace}}, c) where P
+#function liftinputalg(s::ConstrainedSystem{<:AbstractSystem, GraphAutomaton{P, MP.FullSpace}}, c) where P
 #    ConstrainedSystem(liftinputalg(s.s), s.a), c
 #end
 #function liftinputalg(s::ConstrainedSystem, c)

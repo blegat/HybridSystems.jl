@@ -7,7 +7,7 @@ N = 2
 
 using FillArrays
 using HybridSystems
-A = LightAutomaton(N)
+A = GraphAutomaton(N)
 add_transition!(A, 1, 2, 1)
 add_transition!(A, 2, 2, 1)
 ##add_transition!(A, 2, 3, 1)
