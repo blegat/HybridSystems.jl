@@ -28,9 +28,9 @@ AbstractAutomaton
 HybridSystems.AbstractTransition
 OneStateAutomaton
 OneStateTransition
-LightAutomaton
-LightAutomaton(::Int)
-HybridSystems.LightTransitionIterator
+GraphAutomaton
+GraphAutomaton(::Int)
+HybridSystems.GraphTransitionIterator
 ```
 
 ## Switchings

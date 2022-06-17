@@ -63,8 +63,8 @@ end
         @test !has_transition(automaton, HybridSystems.OneStateTransition(7))
     end
 
-    @testset "LightAutomaton" begin
-        automaton = LightAutomaton(2)
+    @testset "GraphAutomaton" begin
+        automaton = GraphAutomaton(2)
         @test isempty(transitions(automaton, 1, 2))
         @test length(transitions(automaton, 1, 2)) == 0
         t1 = add_transition!(automaton, 1, 2, 1)

@@ -1,4 +1,4 @@
-export LightAutomaton, AbstractAutomaton, OneStateAutomaton
+export GraphAutomaton, AbstractAutomaton, OneStateAutomaton
 export states, modes, nstates, nmodes, transitions, ntransitions
 export source, event, symbol, target, transitiontype
 export add_transition!, has_transition, rem_transition!, rem_state!, add_state!

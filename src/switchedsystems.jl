@@ -55,7 +55,7 @@ function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, G::Abstract
     HybridSystem(G, modes, rm, sw, Dict{Symbol, Any}(kws))
 end
 function discreteswitchedsystem(A::AbstractVector{<:AbstractMatrix}, S::AbstractVector; kws...)
-    G = LightAutomaton(length(A))
+    G = GraphAutomaton(length(A))
     for σ in 1:length(A)
         for σnext in 1:length(A)
             add_transition!(G, σ, σnext, σ)
