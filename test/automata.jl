@@ -6,7 +6,7 @@ function test_state_prop(automaton)
     @test typeof(prop) == HybridSystems.state_property_type(typeof(automaton), Float64)
     prop[1] = 0.5
     @test prop[1] == 0.5
-    iprop = HybridSystems.typed_map(Int, x -> convert(Int, ceil(x)), prop)
+    iprop = HybridSystems.typed_map(Int, x -> ceil(Int, x), prop)
     @test typeof(iprop) == HybridSystems.state_property_type(typeof(automaton), Int)
     @test iprop[1] == 1
 end
