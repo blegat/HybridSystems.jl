@@ -14,7 +14,7 @@ MathematicalSystems = "d14a8603-c872-5ed3-9ece-53e0e82e39da"
 FillArrays = "0.8, 0.9, 0.10, 0.11, 0.12, 0.13"
 Graphs = "1"
 MappedArrays = "0.2, 0.3, 0.4"
-MathematicalSystems = "0.11"
+MathematicalSystems = "0.11, 0.12"
 julia = "1"
 
 [extras]
