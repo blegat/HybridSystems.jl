@@ -2,7 +2,7 @@
 #    n = HybridSystems.dim(s)
 #    z = find(i -> iszero(sum(abs.(s.B[i,:]))), 1:n)
 #    # TODO the affine space may not be parallel to classical axis
-#    DiscreteLinearAlgebraicSystem(s.A[z, :], (eye(n))[z, :])
+#    DiscreteLinearDescriptorSystem(s.A[z, :], (eye(n))[z, :])
 #end
 #
 #import MultivariatePolynomials
