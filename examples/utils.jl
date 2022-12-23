@@ -57,7 +57,7 @@ function algebraiclift(s::DiscreteLinearControlSystem{T, MT, FullSpace}) where {
     n = statedim(s)
     z = find(i -> iszero(sum(abs.(s.B[i,:]))), 1:n)
     # TODO ty - 1//2y^3 + 3//1xy + 2//1yhe affine space may not be parallel to classical axis
-    DiscreteLinearAlgebraicSystem(s.A[z, :], (eye(n))[z, :])
+    DiscreteLinearDescriptorSystem(s.A[z, :], (eye(n))[z, :])
 end
 algebraiclift(s::DiscreteIdentitySystem) = s
 algebraiclift(S::AbstractVector) = algebraiclift.(S)
