@@ -4,7 +4,9 @@ using HybridSystems
 function test_state_prop(automaton)
     prop = HybridSystems.state_property(automaton, Float64)
     @test typeof(prop) == HybridSystems.state_property_type(typeof(automaton), Float64)
-    prop[1] = 0.5
+    for i in 1:nstates(automaton)
+        prop[i] = 0.5
+    end
     @test prop[1] == 0.5
     iprop = HybridSystems.typed_map(Int, x -> ceil(Int, x), prop)
     @test typeof(iprop) == HybridSystems.state_property_type(typeof(automaton), Int)
