@@ -21,6 +21,7 @@ The following package implements algorithms using this interface:
 
 * [SwitchOnSafety](https://github.com/blegat/SwitchOnSafety.jl) : Computing invariant sets of hybrid systems.
 * [ReachabilityAnalysis](https://github.com/JuliaReach/ReachabilityAnalysis.jl) : Computing reachable states of hybrid dynamical systems.
+* [Dionysos](https://github.com/dionysos-dev/Dionysos.jl) : Solve optimal control problems on hybrid systems.
 
 ## Documentation
 
