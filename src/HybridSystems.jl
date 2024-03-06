@@ -86,12 +86,13 @@ end
 
 # System
 export statedim, stateset, inputdim, inputset, guard, assignment, mode, target_mode, resetmap
+
 """
-    statedim(hs::HybridSystem, u::Int)
+    statedim(hs::HybridSystem, u::Int=1)
 
 Returns the dimension of the state space of the system at discrete state `u`.
 """
-MathematicalSystems.statedim(hs::HybridSystem, u::Int) = statedim(hs.modes[u])
+MathematicalSystems.statedim(hs::HybridSystem, u::Int=1) = statedim(hs.modes[u])
 
 """
     stateset(s::AbstractSystem, u::Int)
@@ -140,11 +141,11 @@ guard(hs::AbstractHybridSystem, t) = stateset(resetmap(hs, t))
 MathematicalSystems.stateset(hs::AbstractHybridSystem, t) = guard(hs, t)
 
 """
-    inputdim(s::AbstractSystem, u::Int)
+    inputdim(s::AbstractSystem, u::Int=1)
 
 Returns the dimension of the input space of the system at mode `u`.
 """
-MathematicalSystems.inputdim(hs::HybridSystem, u::Int) = inputdim(hs.modes[u])
+MathematicalSystems.inputdim(hs::HybridSystem, u::Int=1) = inputdim(hs.modes[u])
 
 """
     inputset(s::AbstractSystem, u::Int)
