@@ -33,8 +33,8 @@ The following package implements algorithms using this interface:
 [docs-stable-url]: https://blegat.github.io/HybridSystems.jl/stable/index.html
 [docs-latest-url]: https://blegat.github.io/HybridSystems.jl/latest/index.html
 
-[build-img]: https://github.com/blegat/HybridSystems.jl/workflows/CI/badge.svg?branch=master
-[build-url]: https://github.com/blegat/HybridSystems.jl/actions?query=workflow%3ACI
+[build-img]: https://github.com/blegat/HybridSystems.jl/actions/workflows/ci.yml/badge.svg?branch=master
+[build-url]: https://github.com/blegat/HybridSystems.jl/actions/workflows/ci.yml
 [codecov-img]: http://codecov.io/github/blegat/HybridSystems.jl/coverage.svg?branch=master
 [codecov-url]: http://codecov.io/github/blegat/HybridSystems.jl?branch=master
 
