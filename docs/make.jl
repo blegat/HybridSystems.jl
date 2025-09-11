@@ -1,11 +1,11 @@
 using Documenter, HybridSystems
 
+DocMeta.setdocmeta!(HybridSystems, :DocTestSetup, :(using HybridSystems); recursive=true)
+
 makedocs(
-    strict = true,
-    # See https://github.com/JuliaDocs/Documenter.jl/issues/868
-    html_prettyurls = get(ENV, "CI", nothing) == "true",
-    modules = [HybridSystems],
     sitename = "HybridSystems.jl",
+    modules = [HybridSystems],
+    format=Documenter.HTML(; prettyurls=get(ENV, "CI", nothing) == "true"),
     pages = [
         "Home" => "index.md",
         "Library" => Any[
