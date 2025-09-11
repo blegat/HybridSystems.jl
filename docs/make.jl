@@ -16,4 +16,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/blegat/HybridSystems.jl.git",
+    push_preview = true
 )
