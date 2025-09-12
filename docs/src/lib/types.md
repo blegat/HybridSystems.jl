@@ -9,9 +9,6 @@ Depth = 3
 
 ```@meta
 CurrentModule = HybridSystems
-DocTestSetup = quote
-    using HybridSystems
-end
 ```
 
 ## Hybrid systems
