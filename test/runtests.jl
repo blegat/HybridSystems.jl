@@ -58,7 +58,8 @@ include("automata.jl")
         s = discreteswitchedsystem([ones(2, 2), zeros(2, 2)], [square, simplex])
         @test nstates(s) == 2
         @test states(s) == 1:2
-        @test all(statedim.(s, states(s)) .== 2)
+        @test all(statedim.(s, states(s)) .== 2) && statedim(s) == 2
+        @test all(inputdim.(s, states(s)) .== 0) && inputdim(s) == 0
         @test stateset(s, 1) === square
         @test stateset(s, 2) === simplex
         #@test length(transitions(s)) == 4
@@ -69,7 +70,8 @@ include("automata.jl")
         s = discreteswitchedsystem([ones(2, 2), zeros(2, 2)], Fill(square, 2))
         @test nstates(s) == 2
         @test states(s) == 1:2
-        @test all(statedim.(s, states(s)) .== 2)
+        @test all(statedim.(s, states(s)) .== 2) && statedim(s) == 2
+        @test all(inputdim.(s, states(s)) .== 0) && inputdim(s) == 0
         @test stateset(s, 1) === square
         @test stateset(s, 2) === square
         #@test length(transitions(s)) == 4
@@ -83,9 +85,9 @@ end
         s = square_example(Polyhedra.DefaultLibrary{Float64}())
         @test nstates(s) == 1
         @test states(s) == 1:1
-        @test statedim(s, 1) == 2
+        @test statedim(s, 1) == statedim(s) == 2
         @test stateset(s, 1) isa Polyhedra.DefaultPolyhedron{Float64}
-        @test inputdim(s, 1) == 0
+        @test inputdim(s, 1) == inputdim(s) == 0
     end
     @testset "Horizontal jump" begin
         include("../examples/horizontal_jump.jl")
@@ -93,6 +95,7 @@ end
             s = horizontal_jump_example(Polyhedra.DefaultLibrary{Float64}(), shift)
             @test nstates(s) == 2
             @test states(s) == 1:2
+            @test statedim(s) == 2
             for u in states(s)
                 @test mode(s, u) === s.modes[u]
                 @test statedim(s, u) == 2
@@ -117,8 +120,7 @@ end
             @test target(s, t) == 1
             @test source(s, t) == 1
             #@test sprint(show, s) == "Hybrid System with automaton HybridSystems.GraphAutomaton{Graphs.SimpleGraphs.SimpleDiGraph{Int},Graphs.SimpleGraphs.SimpleEdge{Int}}({7, 21} directed simple Int graph, Dict(Edge 2 => 3=>2,Edge 6 => 5=>1,Edge 2 => 1=>1,Edge 4 => 4=>1,Edge 4 => 3=>2,Edge 3 => 6=>2,Edge 6 => 3=>2,Edge 4 => 6=>2,Edge 7 => 7=>1,Edge 6 => 6=>2,Edge 3 => 2=>1,Edge 5 => 4=>1,Edge 5 => 6=>2,Edge 7 => 6=>2,Edge 1 => 3=>2,Edge 5 => 3=>2,Edge 2 => 6=>2,Edge 1 => 1=>1,Edge 1 => 6=>2,Edge 3 => 3=>2,Edge 7 => 3=>2))"
-            @test iszero(inputdim(s, 1))
-            @test iszero(inputdim(s, 2))
+            @test all(inputdim.(s, states(s)) .== 0) && inputdim(s) == 0
         end
     end
 end
